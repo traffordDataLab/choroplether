@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+    <head>
+        <title>Trafford Data Lab: Choroplether</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="trafford"/>
+        <meta name="description" content=""/>
+
+        <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labBase.css"/>
+        <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labWebsite.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/themes/default.min.css"/>
+
+        <style>
+            fieldset
+            {
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                box-shadow: 5px 5px 10px #f0f0f0;
+                margin-bottom: 20px;
+                font-size: 0.85em;
+                padding-top: 0.75em;
+            }
+
+            legend
+            {
+                font-size: 14px;
+                font-weight: bold;
+                text-transform: uppercase;
+                background-color: #fc6721;
+                color: #fff;
+                border-radius: 10px;
+                padding: 0 8px;
+            }
+
+            legend:hover, .showContentMsg:hover
+            {
+                cursor: pointer;
+            }
+
+            fieldset ul
+            {
+                float: left;        /* so that the textboxes can float next to the list */
+                padding-left: 1em;  /* don't indent the list past the left margin of the other content */
+            }
+
+            fieldset textarea
+            {
+                width: 50%;
+                height: 6em;
+                min-height: 6em;
+                float: right;
+                resize: vertical;
+                margin-top: 1em;
+            }
+
+            label
+            {
+                padding-right: 10px;
+            }
+
+            legend .fa
+            {
+                margin-left: 0.5em; /* move the expand/minimise icon away from legend name in the fieldsets */
+            }
+
+            .showContentMsg
+            {
+                color: #757575;
+            }
+
+            .labButton
+            {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            #headerTitle
+            {
+              padding-top: 10px;
+              padding-left: 10px;
+              font-size: 20px;
+              color: #757575;
+            }
+
+            #labLogo, #headerTitle
+            {
+                float: left;
+                display: inline-block;
+            }
+
+            #vegaViz
+            {
+                padding-top: 10px;
+            }
+
+            /* Overridden styles from labWebsite.css */
+            @media (max-width:620px)
+            {
+                .main
+                {
+                    margin-top: 70px;
+                }
+            }
+
+            /* Alertify theme overidden styles */
+            .alertify .ajs-header
+            {
+                color: #757575;
+            }
+
+            .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok, .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-cancel
+            {
+                    color: #fc6721;
+            }
+
+            .alertify button:focus, .alertify input:focus
+            {
+                outline: 2px solid rgba(252, 103, 33, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div id="labLogo"><a href="https://www.trafforddatalab.io/index.html"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a></div>
+                <div id="headerTitle">Choroplether</div>
+            </div>
+
+            <div class="main">
+                <p>Web application allowing the quick creation of choropleth visualisations based on Vega-Lite.</p>
+
+                <div class="singleColumn">
+                        <!-- File loading form elements (hidden via CSS) START -->
+                        <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
+                        <input type="file" id="localFileGeog" class="hideContent" onChange="localFileLoader(this,'geography')"/>
+                        <!-- File loading elements END -->
+
+                        <fieldset>
+                            <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
+                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
+                            <div id="dataForm">
+                                Provide the data, in <abbr title="Comma Separated Values">CSV</abbr> or <abbr title="JavaScript Object Notation">JSON</abbr> format, using one of the following methods:
+                                <br />
+                                <ul>
+                                    <li><span class="labButton" style="margin: 0;" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
+                                    <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                    <li>Paste the data directly into the box.</li>
+                                </ul>
+                                <textarea id="data" onChange="checkData(this)"></textarea>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
+                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
+                            <div id="geographyForm" class="hideContent">
+                                Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                                <p>
+                                    <select id="geographyList" onchange="checkGeographyChoice(this)">
+                                        <optgroup label="Electoral Ward">
+                                            <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
+                                            <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
+                                        </optgroup>
+                                        <optgroup label="Lower Layer Super Output Area (LSOA)">
+                                            <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/trafford_lsoa_generalised.geojson">Trafford LSOAs</option>
+                                            <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/gm_lsoa_generalised.geojson">Greater Manchester LSOAs</option>
+                                        </optgroup>
+                                        <optgroup label="Middle Layer Super Output Area (MSOA)">
+                                            <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/trafford_msoa_generalised.geojson">Trafford MSOAs</option>
+                                            <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs</option>
+                                        </optgroup>
+                                        <optgroup label="Miscellaneous">
+                                            <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
+                                        </optgroup>
+                                        <option value="other">Other (custom)...</option>
+                                    </select>
+                                </p>
+                                <div id="">
+
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
+                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
+                            <div id="designForm" class="hideContent">
+                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="createVisualisation()"/>
+                            </div>
+                        </fieldset>
+                </div>
+                <div class="singleColumn">
+                    <div id="vegaViz"></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="leftFooter">
+                    <div class="logoMedia">
+                        <span class="hideContent">Visit us on </span>
+                        <a class="linkMedia" href="https://twitter.com/traffordDataLab" target="_blank"><span class="fab fa-twitter-square"></span><span class="hideContent">Twitter</span></a>
+                        <span class="hideContent">, </span>
+                        <a class="linkMedia" href="https://github.com/traffordDataLab" target="_blank"><span class="fab fa-github"></span><span class="hideContent">Github</span></a>
+                        <span class="hideContent"> and </span>
+                        <a class="linkMedia" href="https://medium.com/@traffordDataLab" target="_blank"><span class="fab fa-medium"></span><span class="hideContent">Medium<br /></span></a>
+                    </div>
+                    <div class="license">Code <a class="footerLink" href="https://www.trafforddatalab.io/NAME-OF-REPO-HERE/LICENSE.txt" target="_blank">licensed</a> under MIT, data under OGL</div>
+                </div>
+                <div class="rightFooter">
+                    <a href="https://www.trafford.gov.uk" target="_blank"><img class="logoTrafford" src="https://www.trafforddatalab.io/images/trafford_council_logo_black_on_white_100px.png" alt="Trafford Council" border="0"/></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load script libraries for Vega-Lite -->
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.5.3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
+        <!-- Alertify - Nice feedback mechanism to the user for errors and issues -->
+        <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
+
+        <script>
+            /*
+                ### Attributions and licences ###
+
+                Created:        2019-09-04 by James Austin - Trafford Data Lab
+                Purpose:        Allow users to create Vega-Lite choropleth visualisations easily
+                Dependencies:   Vega-Lite - (C) University of Washington Interactive Data Lab https://vega.github.io/vega-lite/
+                                Alertify.js - (C) Mohammad Younes http://alertifyjs.com
+                                Fontawesome - (C) Fonticons, Inc. All rights reserved https://fontawesome.com
+                                All other code by Trafford Data Lab
+
+                Licence:        Vega-Lite: https://github.com/vega/vega-lite/blob/master/LICENSE
+                                Alertify: https://opensource.org/licenses/gpl-3.0
+                                Fontawesome: https://fontawesome.com/license
+                                Trafford Data Lab:
+
+            */
+            var errorCannotCreateViz = '<p>Sorry, it is not possible to create a visualisation at the moment</p><p>Check the data and/or the geography you are using.</p>';
+            var vizContainer = document.getElementById('vegaViz');  // the DIV where the visualisation is created
+
+            /*
+                TODO:
+                1. Need the user to supply the data via a file upload
+                2. If everything is OK, insert this data into the Vega spec template
+                3. Embed the vega visualisation
+                4. Allow the user to change the palette from a simple set of options
+                5. Bear in mind the following plugins, especially the Leaflet one, (would like to allow tiles to be displayed in the background):
+                    - https://github.com/nyurik/leaflet-vega
+                    - https://github.com/vega/vega-tooltip
+
+                NOTE:
+                1. encoding.scale.scheme is the palette. Choices are:
+
+            */
+
+            // TODO: the geography that the visualisation is based on.  This should be selectable from a drop-down with an option to load a custom one.
+            //var vizGeographyUrl = 'https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_super_generalised.geojson';
+
+            // TODO: the data to be visualised.  This should be supplied by the user via a file upload or entered directly into the text box, similar to Plotter
+            var vizData = [
+              /*{"area_name": "Altrincham", "area_code": "E05000819", "value": 16.2},*/
+              {"area_name": "Ashton upon Mersey", "area_code": "E05000820", "value": 9.3},
+              /*{"area_name": "Bowdon", "area_code": "E05000821", "value": 10.8},*/
+              /*{"area_name": "Broadheath", "area_code": "E05000822", "value": 11.2},*/
+              {"area_name": "Brooklands", "area_code": "E05000823", "value": 8.3},
+              {"area_name": "Bucklow-St Martins", "area_code": "E05000824", "value": 25.4},
+              {"area_name": "Clifford", "area_code": "E05000825", "value": 20.9},
+              {"area_name": "Davyhulme East", "area_code": "E05000826", "value": 15.7},
+              {"area_name": "Davyhulme West", "area_code": "E05000827", "value": 8.7},
+              {"area_name": "Flixton", "area_code": "E05000828", "value": 7.3},
+              {"area_name": "Gorse Hill", "area_code": "E05000829", "value": 26.7},
+              /*{"area_name": "Hale Barns", "area_code": "E05000830", "value": 8.1},
+              {"area_name": "Hale Central", "area_code": "E05000831", "value": 10.5},*/
+              {"area_name": "Longford", "area_code": "E05000832", "value": 20.1},
+              {"area_name": "Priory", "area_code": "E05000833", "value": 19.3},
+              {"area_name": "St Mary's", "area_code": "E05000834", "value": 10.4},
+              {"area_name": "Sale Moor", "area_code": "E05000835", "value": 8.9},
+              {"area_name": "Stretford", "area_code": "E05000836", "value": 15},
+              /*{"area_name": "Timperley", "area_code": "E05000837", "value": 5.3},*/
+              {"area_name": "Urmston", "area_code": "E05000838", "value": 12.7}
+              /*{"area_name": "Village", "area_code": "E05000839", "value": 13.7}*/
+            ];
+
+            // TODO: the palette used in the visualisaton. This should be chosen by the user from a limited list in a nice UI.
+            var vizPalette = 'oranges';
+
+
+
+
+
+            // Performs CSS class add/remove etc. to show/hide content sections
+            function toggleContentSection(name) {
+                var elementIcon = document.getElementById(name + 'Toggle');
+                var elementMessage = document.getElementById(name + 'ShowContent');
+                var elementForm = document.getElementById(name + 'Form');
+
+                // Font Awesome icon in the legend
+                elementIcon.classList.toggle('fa-minus');
+                elementIcon.classList.toggle('fa-plus');
+
+                elementMessage.classList.toggle('hideContent'); // message to show the full content
+                elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+            }
+
+            function checkData(el) {
+                // Only do something if there is content with the data box
+                if (el.value !== '' && el.value !== null) {
+                    // TODO: is the content a URL (must be https://) or pasted data?
+                    //      - If URL try to load it
+                    //      - If pasted data, is it JSON or CSV?
+                }
+            }
+
+            function checkGeographyChoice(el) {
+                if (el.value == 'other') {
+                    // TODO: show the custom geography input box
+                }
+                else {
+                    createVisualisation();  // update
+                }
+            }
+
+            // Attempt to obtain a local file prior to processing
+            function localFileLoader(src, dest) {
+                if (src.value != '') {
+                    try {
+                        var reader = new FileReader();
+               	        reader.onload = function (e) {
+                            document.getElementById(dest).value = e.target.result;
+               	        };
+                        reader.readAsText(src.files[0]);
+                        src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
+                    }
+                    catch(e) {
+                        // we can't use window.FileReader or something else went wrong so inform the user
+                        alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
+                    }
+                }
+            }
+
+            // Attempt to obtain a remote file via URL
+            function remoteFileLoader(url) {
+                labAjax(url, function (data) {
+                    if (data == null || data == '') {
+                        alertify.alert('Sorry, data couldn\'t be loaded...', 'Please check you entered the URL correctly. If so, it may be that the file no longer exists, the URL has changed or the server rejected the request.');
+                        return false;
+                    }
+
+                    processGeoJson(data);
+                }, { type: 'txt' });    // Don't get labAjax to do the parsing - just return the content as-is and we parse it in the processGeoJson function
+            }
+
+            function createVisualisation() {
+                // Clear any previous visualisation
+                vizContainer.innerHTML = '';
+
+                var vizTitle = document.getElementById('vizTitle').value;
+                var vizGeographyUrl = document.getElementById('geographyList').value;
+
+                // The Vega-Lite specification that forms the visualisation, incorporating the objects defined above
+                var vegaSpec = {
+                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
+                    "description": "Choropleth visualisation",
+                    "autosize": "fit",
+                    "width": 600,
+                    "height": 500,
+                    "title": {
+                        "text": vizTitle,
+                        "font": "Roboto",
+                        "color": "#757575"
+                    },
+                    "data": {
+                        "url": vizGeographyUrl,
+                        "format": {
+                            "property": "features"
+                        }
+                    },
+                    "transform": [
+                        {
+                            "lookup": "properties.area_code",
+                            "from": {
+                                "data": {
+                                    "values": vizData
+                                },
+                                "key": "area_code",
+                                "fields": ["value"]
+                            }
+                        }
+                    ],
+                    "mark": {
+                        "type": "geoshape",
+                        "stroke": "white",
+                        "strokeWidth": 1
+                    },
+                    "projection": {
+                        "type": "mercator"
+                    },
+                    "encoding": {
+                        "color": {
+                            "field": "value",
+                            "scale": {
+                                "scheme": vizPalette
+                            },
+                            "type": "quantitative",
+                            "legend": {
+                                "title": null,
+                                "direction": "horizontal",
+                                "orient": "bottom"
+                            }
+                        },
+                        "tooltip": [
+                            {
+                                "field": "properties.area_name",
+                                "type": "nominal",
+                                "title": "Area"
+                            },
+                            {
+                                "field": "value",
+                                "type": "quantitative",
+                                "title": "Value"
+                            }
+                        ]
+                    },
+                    "config": {
+                        "view": {
+                            "stroke": "transparent"
+                        }
+                    }
+                }
+
+                // Embed the Vega-lite visualisation
+                vegaEmbed('#vegaViz', vegaSpec, {defaultStyle: true}).catch(console.warn);
+
+                if (vizContainer.innerHTML == '') vizContainer.innerHTML = errorCannotCreateViz;
+            }
+        </script>
+    </body>
+</html>
