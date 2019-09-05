@@ -131,7 +131,7 @@
             </div>
 
             <div class="main">
-                <p>Web application allowing the quick creation of choropleth visualisations based on Vega-Lite.</p>
+                <p>Web application allowing the quick creation of <a href="https://en.wikipedia.org/wiki/Choropleth_map" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>.</p>
 
                 <div class="singleColumn">
                         <!-- File loading form elements (hidden via CSS) START -->
@@ -189,7 +189,7 @@
                             <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
                             <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
                             <div id="designForm" class="hideContent">
-                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="createVisualisation()"/>
+                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this)"/>
                             </div>
                         </fieldset>
                 </div>
@@ -208,7 +208,7 @@
                         <span class="hideContent"> and </span>
                         <a class="linkMedia" href="https://medium.com/@traffordDataLab" target="_blank"><span class="fab fa-medium"></span><span class="hideContent">Medium<br /></span></a>
                     </div>
-                    <div class="license">Code <a class="footerLink" href="https://www.trafforddatalab.io/NAME-OF-REPO-HERE/LICENSE.txt" target="_blank">licensed</a> under MIT, data under OGL</div>
+                    <div class="license">Code <a class="footerLink" href="https://www.trafforddatalab.io/NAME-OF-REPO-HERE/LICENSE.txt" target="_blank">licensed</a> under MIT</div>
                 </div>
                 <div class="rightFooter">
                     <a href="https://www.trafford.gov.uk" target="_blank"><img class="logoTrafford" src="https://www.trafforddatalab.io/images/trafford_council_logo_black_on_white_100px.png" alt="Trafford Council" border="0"/></a>
@@ -240,28 +240,8 @@
                                 Trafford Data Lab:
 
             */
-            var errorCannotCreateViz = '<p>Sorry, it is not possible to create a visualisation at the moment</p><p>Check the data and/or the geography you are using.</p>';
-            var vizContainer = document.getElementById('vegaViz');  // the DIV where the visualisation is created
 
-            /*
-                TODO:
-                1. Need the user to supply the data via a file upload
-                2. If everything is OK, insert this data into the Vega spec template
-                3. Embed the vega visualisation
-                4. Allow the user to change the palette from a simple set of options
-                5. Bear in mind the following plugins, especially the Leaflet one, (would like to allow tiles to be displayed in the background):
-                    - https://github.com/nyurik/leaflet-vega
-                    - https://github.com/vega/vega-tooltip
-
-                NOTE:
-                1. encoding.scale.scheme is the palette. Choices are:
-
-            */
-
-            // TODO: the geography that the visualisation is based on.  This should be selectable from a drop-down with an option to load a custom one.
-            //var vizGeographyUrl = 'https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_super_generalised.geojson';
-
-            // TODO: the data to be visualised.  This should be supplied by the user via a file upload or entered directly into the text box, similar to Plotter
+            // TODO: REMOVE THIS - JUST FOR TESTING
             var vizData = [
               /*{"area_name": "Altrincham", "area_code": "E05000819", "value": 16.2},*/
               {"area_name": "Ashton upon Mersey", "area_code": "E05000820", "value": 9.3},
@@ -286,13 +266,104 @@
               /*{"area_name": "Village", "area_code": "E05000839", "value": 13.7}*/
             ];
 
-            // TODO: the palette used in the visualisaton. This should be chosen by the user from a limited list in a nice UI.
-            var vizPalette = 'oranges';
+            // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
+            var vegaSpec = {
+                "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
+                "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
+                "autosize": "fit",
+                "width": 600,
+                "height": 500,
+                "title": {
+                    "text": "",
+                    "font": "Roboto",
+                    "color": "#757575"
+                },
+                "data": {
+                    "url": document.getElementById("geographyList").value,
+                    "format": {
+                        "property": "features"
+                    }
+                },
+                "transform": [
+                    {
+                        "lookup": "properties.area_code",
+                        "from": {
+                            "data": {
+                                "values": vizData
+                            },
+                            "key": "area_code",
+                            "fields": ["value"]
+                        }
+                    }
+                ],
+                "mark": {
+                    "type": "geoshape",
+                    "stroke": "white",
+                    "strokeWidth": 1
+                },
+                "projection": {
+                    "type": "mercator"
+                },
+                "encoding": {
+                    "color": {
+                        "field": "value",
+                        "scale": {
+                            "scheme": 'oranges'
+                        },
+                        "type": "quantitative",
+                        "legend": {
+                            "title": null,
+                            "direction": "horizontal",
+                            "orient": "bottom"
+                        }
+                    },
+                    "tooltip": [
+                        {
+                            "field": "properties.area_name",
+                            "type": "nominal",
+                            "title": "Area"
+                        },
+                        {
+                            "field": "value",
+                            "type": "quantitative",
+                            "title": "Value"
+                        }
+                    ]
+                },
+                "config": {
+                    "view": {
+                        "stroke": "transparent"
+                    }
+                }
+            }
+
+            var errorCannotCreateViz = '<p>Sorry, it is not possible to create a visualisation at the moment</p><p>Check the data and/or the geography you are using.</p>';
+            var vizContainer = document.getElementById('vegaViz');  // the DIV where the visualisation is created
+
+            /*
+                TODO:
+                1. Need the user to supply the data via a file upload
+                2. If everything is OK, insert this data into the Vega spec template
+                3. Embed the vega visualisation
+                4. Allow the user to change the palette from a simple set of options
+                5. Bear in mind the following plugins, especially the Leaflet one, (would like to allow tiles to be displayed in the background):
+                    - https://github.com/nyurik/leaflet-vega
+                    - https://github.com/vega/vega-tooltip
+
+                NOTE:
+                1. encoding.scale.scheme is the palette. Choices are:
+
+            */
+
+            // TODO: the geography that the visualisation is based on.  This should be selectable from a drop-down with an option to load a custom one.
+            //var vizGeographyUrl = 'https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_super_generalised.geojson';
 
 
 
 
 
+
+            // ========= UI operations =========
             // Performs CSS class add/remove etc. to show/hide content sections
             function toggleContentSection(name) {
                 var elementIcon = document.getElementById(name + 'Toggle');
@@ -306,25 +377,10 @@
                 elementMessage.classList.toggle('hideContent'); // message to show the full content
                 elementForm.classList.toggle('hideContent');    // the main content of the fieldset
             }
+            // =========
 
-            function checkData(el) {
-                // Only do something if there is content with the data box
-                if (el.value !== '' && el.value !== null) {
-                    // TODO: is the content a URL (must be https://) or pasted data?
-                    //      - If URL try to load it
-                    //      - If pasted data, is it JSON or CSV?
-                }
-            }
 
-            function checkGeographyChoice(el) {
-                if (el.value == 'other') {
-                    // TODO: show the custom geography input box
-                }
-                else {
-                    createVisualisation();  // update
-                }
-            }
-
+            // ========= File loading capabilities, either from the local device or remotely =========
             // Attempt to obtain a local file prior to processing
             function localFileLoader(src, dest) {
                 if (src.value != '') {
@@ -354,7 +410,53 @@
                     processGeoJson(data);
                 }, { type: 'txt' });    // Don't get labAjax to do the parsing - just return the content as-is and we parse it in the processGeoJson function
             }
+            // =========
 
+
+            // ========= Dynamic changes to the Vega-Lite specification based on user choices =========
+            // Check the input provided for the data of the visualisation
+            function checkData(el) {
+                // Only do something if there is content within the data box
+                if (el.value !== '' && el.value !== null) {
+                    // TODO: is the content a URL (must be https://) or pasted data?
+                    if (el.value.substring(0, 8) == 'https://') {
+                        vegaSpec.transform[0].from.data = {
+                            "url": el.value
+                        }
+
+                        createVisualisation();          // update the visualisation
+                    }
+                    //      - If pasted data, is it JSON or CSV?
+                }
+            }
+
+            // Check the input provided for the geography of the visualisaton
+            function checkGeographyChoice(el) {
+                // Set up the common objects of the geography
+                vegaSpec.data = {
+                    "format": {
+                        "property": "features"
+                    }
+                }
+
+                if (el.value == 'other') {
+                    // TODO: show the custom geography input box
+                }
+                else {
+                    vegaSpec.data.url = el.value;   // create a URL object and set it to the value chosen in the geography select list
+                    createVisualisation();          // update the visualisation
+                }
+            }
+
+            // Check the input provided for the visualisation title
+            function checkTitle(el) {
+                vegaSpec.title.text = el.value;     // set the title based on the content provided by the user
+                createVisualisation();              // update the visualisation
+            }
+            // =========
+
+
+            // Main function to create the visualisation and embed it within the page
             function createVisualisation() {
                 // Clear any previous visualisation
                 vizContainer.innerHTML = '';
@@ -362,76 +464,7 @@
                 var vizTitle = document.getElementById('vizTitle').value;
                 var vizGeographyUrl = document.getElementById('geographyList').value;
 
-                // The Vega-Lite specification that forms the visualisation, incorporating the objects defined above
-                var vegaSpec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
-                    "description": "Choropleth visualisation",
-                    "autosize": "fit",
-                    "width": 600,
-                    "height": 500,
-                    "title": {
-                        "text": vizTitle,
-                        "font": "Roboto",
-                        "color": "#757575"
-                    },
-                    "data": {
-                        "url": vizGeographyUrl,
-                        "format": {
-                            "property": "features"
-                        }
-                    },
-                    "transform": [
-                        {
-                            "lookup": "properties.area_code",
-                            "from": {
-                                "data": {
-                                    "values": vizData
-                                },
-                                "key": "area_code",
-                                "fields": ["value"]
-                            }
-                        }
-                    ],
-                    "mark": {
-                        "type": "geoshape",
-                        "stroke": "white",
-                        "strokeWidth": 1
-                    },
-                    "projection": {
-                        "type": "mercator"
-                    },
-                    "encoding": {
-                        "color": {
-                            "field": "value",
-                            "scale": {
-                                "scheme": vizPalette
-                            },
-                            "type": "quantitative",
-                            "legend": {
-                                "title": null,
-                                "direction": "horizontal",
-                                "orient": "bottom"
-                            }
-                        },
-                        "tooltip": [
-                            {
-                                "field": "properties.area_name",
-                                "type": "nominal",
-                                "title": "Area"
-                            },
-                            {
-                                "field": "value",
-                                "type": "quantitative",
-                                "title": "Value"
-                            }
-                        ]
-                    },
-                    "config": {
-                        "view": {
-                            "stroke": "transparent"
-                        }
-                    }
-                }
+
 
                 // Embed the Vega-lite visualisation
                 vegaEmbed('#vegaViz', vegaSpec, {defaultStyle: true}).catch(console.warn);
