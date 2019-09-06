@@ -143,7 +143,7 @@
                             <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
                             <div id="dataForm">
-                                Provide the data, in <abbr title="Comma Separated Values">CSV</abbr> or <abbr title="JavaScript Object Notation">JSON</abbr> format, using one of the following methods:
+                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, using one of the following methods:<br />(Click on the links to download an example of each type of file.)
                                 <br />
                                 <ul>
                                     <li><span class="labButton" style="margin: 0;" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
@@ -179,8 +179,14 @@
                                         <option value="other">Other (custom)...</option>
                                     </select>
                                 </p>
-                                <div id="">
-
+                                <div id="geographyCustom" class="hideContent">
+                                    <p>Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:</p>
+                                    <ul>
+                                        <li><span class="labButton" style="margin: 0;" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
+                                        <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                        <li>Paste the data directly into the box.</li>
+                                    </ul>
+                                    <textarea id="geography" onChange="checkGeography(this)"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -241,31 +247,6 @@
 
             */
 
-            // TODO: REMOVE THIS - JUST FOR TESTING
-            var vizData = [
-              /*{"area_name": "Altrincham", "area_code": "E05000819", "value": 16.2},*/
-              {"area_name": "Ashton upon Mersey", "area_code": "E05000820", "value": 9.3},
-              /*{"area_name": "Bowdon", "area_code": "E05000821", "value": 10.8},*/
-              /*{"area_name": "Broadheath", "area_code": "E05000822", "value": 11.2},*/
-              {"area_name": "Brooklands", "area_code": "E05000823", "value": 8.3},
-              {"area_name": "Bucklow-St Martins", "area_code": "E05000824", "value": 25.4},
-              {"area_name": "Clifford", "area_code": "E05000825", "value": 20.9},
-              {"area_name": "Davyhulme East", "area_code": "E05000826", "value": 15.7},
-              {"area_name": "Davyhulme West", "area_code": "E05000827", "value": 8.7},
-              {"area_name": "Flixton", "area_code": "E05000828", "value": 7.3},
-              {"area_name": "Gorse Hill", "area_code": "E05000829", "value": 26.7},
-              /*{"area_name": "Hale Barns", "area_code": "E05000830", "value": 8.1},
-              {"area_name": "Hale Central", "area_code": "E05000831", "value": 10.5},*/
-              {"area_name": "Longford", "area_code": "E05000832", "value": 20.1},
-              {"area_name": "Priory", "area_code": "E05000833", "value": 19.3},
-              {"area_name": "St Mary's", "area_code": "E05000834", "value": 10.4},
-              {"area_name": "Sale Moor", "area_code": "E05000835", "value": 8.9},
-              {"area_name": "Stretford", "area_code": "E05000836", "value": 15},
-              /*{"area_name": "Timperley", "area_code": "E05000837", "value": 5.3},*/
-              {"area_name": "Urmston", "area_code": "E05000838", "value": 12.7}
-              /*{"area_name": "Village", "area_code": "E05000839", "value": 13.7}*/
-            ];
-
             // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
             var vegaSpec = {
                 "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
@@ -288,9 +269,6 @@
                     {
                         "lookup": "properties.area_code",
                         "from": {
-                            "data": {
-                                "values": vizData
-                            },
                             "key": "area_code",
                             "fields": ["value"]
                         }
@@ -342,9 +320,6 @@
 
             /*
                 TODO:
-                1. Need the user to supply the data via a file upload
-                2. If everything is OK, insert this data into the Vega spec template
-                3. Embed the vega visualisation
                 4. Allow the user to change the palette from a simple set of options
                 5. Bear in mind the following plugins, especially the Leaflet one, (would like to allow tiles to be displayed in the background):
                     - https://github.com/nyurik/leaflet-vega
@@ -355,8 +330,7 @@
 
             */
 
-            // TODO: the geography that the visualisation is based on.  This should be selectable from a drop-down with an option to load a custom one.
-            //var vizGeographyUrl = 'https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_super_generalised.geojson';
+
 
 
 
@@ -420,7 +394,7 @@
             function checkData(el) {
                 // Only do something if there is content within the data box
                 if (el.value !== '' && el.value !== null) {
-                    // TODO: is the content a URL (must be https://) or pasted data?
+                    // Is the content a URL (must be https://) or pasted data?
                     if (el.value.substring(0, 8) == 'https://') {
                         vegaSpec.transform[0].from.data = {
                             "url": el.value
@@ -460,21 +434,41 @@
                 }
             }
 
-            // Check the input provided for the geography of the visualisaton
+            // Handle the UI changes based on the selection in the geography list
             function checkGeographyChoice(el) {
-                // Set up the common objects of the geography
-                vegaSpec.data = {
-                    "format": {
-                        "property": "features"
-                    }
-                }
+                var customGeogContainer = document.getElementById('geographyCustom');
 
                 if (el.value == 'other') {
-                    // TODO: show the custom geography input box
+                    customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
                 }
                 else {
-                    vegaSpec.data.url = el.value;   // create a URL object and set it to the value chosen in the geography select list
-                    createVisualisation();          // update the visualisation
+                    if (!customGeogContainer.classList.contains('hideContent')) {
+                        customGeogContainer.classList.add('hideContent');   // add the 'hideContent' class to the custom geography div
+                        document.getElementById('geography').value = '';    // clear any content present in the custom geography box;
+                    }
+
+                    checkGeography(el);
+                }
+            }
+
+            // Check the input provided for the geography of the visualisaton
+            function checkGeography(el) {
+                if (el.value !== '' && el.value !== null) {
+                    // Set up the common objects of the geography
+                    vegaSpec.data = {
+                        "format": {
+                            "property": "features"
+                        }
+                    }
+
+                    // Is the content a URL (must be https://) or pasted data?
+                    if (el.value.substring(0, 8) == 'https://') {
+                        vegaSpec.data.url = el.value;   // create a URL object and set it to the value chosen in the geography select list
+                        createVisualisation();          // update the visualisation
+                    }
+                    else {
+
+                    }
                 }
             }
 

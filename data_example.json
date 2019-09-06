@@ -1,0 +1,23 @@
+[
+  {"area_name": "Altrincham", "area_code": "E05000819", "value": 1},
+  {"area_name": "Ashton upon Mersey", "area_code": "E05000820", "value": 2},
+  {"area_name": "Bowdon", "area_code": "E05000821", "value": 3},
+  {"area_name": "Broadheath", "area_code": "E05000822", "value": 4},
+  {"area_name": "Brooklands", "area_code": "E05000823", "value": 5},
+  {"area_name": "Bucklow-St Martins", "area_code": "E05000824", "value": 6},
+  {"area_name": "Clifford", "area_code": "E05000825", "value": 7},
+  {"area_name": "Davyhulme East", "area_code": "E05000826", "value": 8},
+  {"area_name": "Davyhulme West", "area_code": "E05000827", "value": 9},
+  {"area_name": "Flixton", "area_code": "E05000828", "value": 10},
+  {"area_name": "Gorse Hill", "area_code": "E05000829", "value": 11},
+  {"area_name": "Hale Barns", "area_code": "E05000830", "value": 12},
+  {"area_name": "Hale Central", "area_code": "E05000831", "value": 13},
+  {"area_name": "Longford", "area_code": "E05000832", "value": 14},
+  {"area_name": "Priory", "area_code": "E05000833", "value": 15},
+  {"area_name": "St Mary's", "area_code": "E05000834", "value": 16},
+  {"area_name": "Sale Moor", "area_code": "E05000835", "value": 17},
+  {"area_name": "Stretford", "area_code": "E05000836", "value": 18},
+  {"area_name": "Timperley", "area_code": "E05000837", "value": 19},
+  {"area_name": "Urmston", "area_code": "E05000838", "value": 20},
+  {"area_name": "Village", "area_code": "E05000839", "value": 21}
+]
