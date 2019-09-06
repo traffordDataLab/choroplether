@@ -387,7 +387,9 @@
                     try {
                         var reader = new FileReader();
                	        reader.onload = function (e) {
-                            document.getElementById(dest).value = e.target.result;
+                            destEl = document.getElementById(dest);
+                            destEl.value = e.target.result;
+                            (dest == 'data') ? checkData(destEl) : checkGeography(destEl);
                	        };
                         reader.readAsText(src.files[0]);
                         src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
@@ -423,10 +425,38 @@
                         vegaSpec.transform[0].from.data = {
                             "url": el.value
                         }
-
-                        createVisualisation();          // update the visualisation
                     }
-                    //      - If pasted data, is it JSON or CSV?
+                    else {
+                        // the data must be in the box directly, either pasted or loaded locally
+                        // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
+
+                        var data = el.value;
+                        var format;
+
+                        try {
+                            data = JSON.parse(data);    // attempt to parse as JSON
+                            format = 'json';
+                        }
+                        catch(e) {
+                            // assumption now is that the data is CSV
+                            // the following regex lines deal with newline characters to ensure the data is presented correctly as a continous string within the Vega-Lite spec
+                            data = data.replace(/\\n/g, '\n');  // replace actual string occurences of "\n" with newline characters
+                            data = data.replace(/\n/g, '\n');   // replace any carriage returns with newline characters
+                            format = 'csv';
+
+                            el.value = data;    // update the input field with the cleaned output
+                        }
+
+                        // add the data to the Vega-Lite spec
+                        vegaSpec.transform[0].from.data = {
+                            "values": data,
+                            "format": {
+                                "type": format
+                            }
+                        }
+                    }
+
+                    createVisualisation();          // update the visualisation
                 }
             }
 
