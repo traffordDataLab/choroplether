@@ -136,7 +136,7 @@
                 <div class="singleColumn">
                         <!-- File loading form elements (hidden via CSS) START -->
                         <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
-                        <input type="file" id="localFileGeog" class="hideContent" onChange="localFileLoader(this,'geography')"/>
+                        <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
                         <!-- File loading elements END -->
 
                         <fieldset>
@@ -440,6 +440,7 @@
 
                 if (el.value == 'other') {
                     customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
+                    // NOTE: the onchange event of the 'geography' textbox calls checkGeography()
                 }
                 else {
                     if (!customGeogContainer.classList.contains('hideContent')) {
@@ -467,7 +468,19 @@
                         createVisualisation();          // update the visualisation
                     }
                     else {
+                        // the data must be in the box directly, either pasted or loaded locally
+                        // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
 
+                        try {
+                            var data = JSON.parse(el.value);    // as GeoJSON is valid JSON, attempt to parse it
+                            vegaSpec.data.values = data;
+                            createVisualisation();              // update the visualisation
+                        }
+                        catch(e) {
+                            // Create an error message to inform the user that the GeoJSON isn't valid
+                            // TODO: maybe think about changing this to an alertify message
+                            vizContainer.innerHTML = "The geography you are trying to use doesn't seem to be GeoJSON.<br />Please check it and try again.";
+                        }
                     }
                 }
             }
@@ -484,11 +497,6 @@
             function createVisualisation() {
                 // Clear any previous visualisation
                 vizContainer.innerHTML = '';
-
-                var vizTitle = document.getElementById('vizTitle').value;
-                var vizGeographyUrl = document.getElementById('geographyList').value;
-
-
 
                 // Embed the Vega-lite visualisation
                 vegaEmbed('#vegaViz', vegaSpec, {defaultStyle: true}).catch(console.warn);
