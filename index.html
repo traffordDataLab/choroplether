@@ -67,15 +67,14 @@
                 margin-left: 0.5em; /* move the expand/minimise icon away from legend name in the fieldsets */
             }
 
+            select
+            {
+                margin-top: 1em;
+            }
+
             .showContentMsg
             {
                 color: #757575;
-            }
-
-            .labButton
-            {
-                padding-top: 0;
-                padding-bottom: 0;
             }
 
             #headerTitle
@@ -95,6 +94,34 @@
             #vegaLiteViz
             {
                 padding-top: 10px;
+            }
+
+            #vizTitle, #paletteOther
+            {
+                width: 50%
+            }
+
+            /* Palette Radio Buttons */
+            #paletteScheme input[type="radio"] {
+              visibility: hidden;
+            }
+
+            #paletteScheme span {
+              padding-top: 5px;
+              padding-bottom: 5px;
+              margin-left: -23px;
+            }
+
+            #paletteScheme input[type="radio"]:checked+span {
+              background-color: #fc6721;
+            }
+
+            /* Overridden styles from labBase.css */
+            .labButton
+            {
+                font-size: 1em;
+                margin: 0;
+                padding: 0 10px;
             }
 
             /* Overridden styles from labWebsite.css */
@@ -131,73 +158,118 @@
             </div>
 
             <div class="main">
-                <p>Web application allowing the quick creation of <a href="https://en.wikipedia.org/wiki/Choropleth_map" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>.</p>
+                <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="tutorial.html">tutorial</a> for more information and a demonstration of how to use the application.</p>
 
                 <div class="singleColumn">
-                        <!-- File loading form elements (hidden via CSS) START -->
-                        <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
-                        <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
-                        <!-- File loading elements END -->
+                    <!-- File loading form elements (hidden via CSS) START -->
+                    <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
+                    <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
+                    <!-- File loading elements END -->
 
-                        <fieldset>
-                            <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
-                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
-                            <div id="dataForm">
-                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, using one of the following methods:<br />(Click on the links to download an example of each type of file.)
+                    <fieldset>
+                        <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
+                        <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
+                        <div id="dataForm">
+                            Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, using one of the following methods:<br />(Click on the links to download an example of each type of file.)
+                            <br />
+                            <ul>
+                                <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
+                                <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                <li>Paste the data directly into the box.</li>
+                            </ul>
+                            <textarea id="data" onChange="checkData(this)"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
+                        <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
+                        <div id="geographyForm" class="hideContent">
+                            Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                            <br />
+                            <select id="geographyList" onchange="checkGeographyChoice(this)">
+                                <optgroup label="Electoral Ward">
+                                    <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
+                                    <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
+                                </optgroup>
+                                <optgroup label="Lower Layer Super Output Area (LSOA)">
+                                    <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/trafford_lsoa_generalised.geojson">Trafford LSOAs</option>
+                                    <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/gm_lsoa_generalised.geojson">Greater Manchester LSOAs</option>
+                                </optgroup>
+                                <optgroup label="Middle Layer Super Output Area (MSOA)">
+                                    <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/trafford_msoa_generalised.geojson">Trafford MSOAs</option>
+                                    <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs</option>
+                                </optgroup>
+                                <optgroup label="Miscellaneous">
+                                    <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
+                                </optgroup>
+                                <option value="other">Other (custom)...</option>
+                            </select>
+
+                            <div id="geographyCustom" class="hideContent">
+                                <br />
+                                Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:
                                 <br />
                                 <ul>
-                                    <li><span class="labButton" style="margin: 0;" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
+                                    <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
                                     <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
                                     <li>Paste the data directly into the box.</li>
                                 </ul>
-                                <textarea id="data" onChange="checkData(this)"></textarea>
+                                <textarea id="geography" onChange="checkGeography(this)"></textarea>
                             </div>
-                        </fieldset>
+                        </div>
+                    </fieldset>
 
-                        <fieldset>
-                            <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
-                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
-                            <div id="geographyForm" class="hideContent">
-                                Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
-                                <p>
-                                    <select id="geographyList" onchange="checkGeographyChoice(this)">
-                                        <optgroup label="Electoral Ward">
-                                            <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
-                                            <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
-                                        </optgroup>
-                                        <optgroup label="Lower Layer Super Output Area (LSOA)">
-                                            <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/trafford_lsoa_generalised.geojson">Trafford LSOAs</option>
-                                            <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/gm_lsoa_generalised.geojson">Greater Manchester LSOAs</option>
-                                        </optgroup>
-                                        <optgroup label="Middle Layer Super Output Area (MSOA)">
-                                            <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/trafford_msoa_generalised.geojson">Trafford MSOAs</option>
-                                            <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs</option>
-                                        </optgroup>
-                                        <optgroup label="Miscellaneous">
-                                            <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
-                                        </optgroup>
-                                        <option value="other">Other (custom)...</option>
-                                    </select>
-                                </p>
-                                <div id="geographyCustom" class="hideContent">
-                                    <p>Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:</p>
-                                    <ul>
-                                        <li><span class="labButton" style="margin: 0;" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
-                                        <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                        <li>Paste the data directly into the box.</li>
-                                    </ul>
-                                    <textarea id="geography" onChange="checkGeography(this)"></textarea>
-                                </div>
+                    <fieldset>
+                        <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
+                        <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
+                        <div id="designForm" class="hideContent">
+                            <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this)"/>
+                            <br /><br />
+                            Palette:<br />
+                            <div id="paletteScheme">
+                                <label>
+                                    <input type="radio" name="paletteScheme" value="Sequential" checked="checked" onChange="changePaletteList(this)"/>
+                                    <span class="labButton">Sequential</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="paletteScheme" value="Diverging" onChange="changePaletteList(this)"/>
+                                    <span class="labButton">Diverging</span>
+                                </label>
                             </div>
-                        </fieldset>
+                            <br />
+                            Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                            <br />
+                            <select id="paletteSequential" onchange="updatePalette(this)">
+                                <optgroup label="Sequential Single-Hue">
+                                    <option value="blues">blues</option>
+                                    <option value="greens">greens</option>
+                                    <option value="oranges" selected="selected">oranges</option>
+                                </optgroup>
+                                <optgroup label="Sequential Multi-Hue">
+                                    <option value="inferno">inferno</option>
+                                    <option value="viridis">viridis</option>
+                                </optgroup>
+                                <option value="other">Other (custom)...</option>
+                            </select>
+                            <select id="paletteDiverging" onchange="updatePalette(this)" class="hideContent">
+                                <optgroup label="Diverging">
+                                    <option value="blueorange" selected="selected">blueorange</option>
+                                    <option value="purplegreen">purplegreen</option>
+                                    <option value="purpleorange">purpleorange</option>
+                                    <option value="redyellowgreen">redyellowgreen</option>
+                                    <option value="spectral">spectral</option>
+                                </optgroup>
+                                <option value="other">Other (custom)...</option>
+                            </select>
 
-                        <fieldset>
-                            <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
-                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
-                            <div id="designForm" class="hideContent">
-                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this)"/>
+                            <div id="paletteCustom" class="hideContent">
+                                <br />
+                                <label for="paletteOther">Enter a valid <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="paletteOther" name="paletteOther" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                <br />
                             </div>
-                        </fieldset>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="singleColumn">
                     <div id="vegaLiteViz"></div>
@@ -286,7 +358,7 @@
                     "color": {
                         "field": "value",
                         "scale": {
-                            "scheme": 'oranges'
+                            "scheme": document.getElementById("paletteSequential").value
                         },
                         "type": "quantitative",
                         "legend": {
@@ -316,24 +388,6 @@
             }
 
 
-
-
-            /*
-                TODO:
-                4. Allow the user to change the palette from a simple set of options
-                5. Bear in mind the following plugins, especially the Leaflet one, (would like to allow tiles to be displayed in the background):
-                    - https://github.com/nyurik/leaflet-vega
-                    - https://github.com/vega/vega-tooltip
-
-                NOTE:
-                1. encoding.scale.scheme is the palette. Choices are:
-
-            */
-
-
-
-
-
             // ========= UI operations =========
             // Performs CSS class add/remove etc. to show/hide content sections
             function toggleContentSection(name) {
@@ -347,6 +401,15 @@
 
                 elementMessage.classList.toggle('hideContent'); // message to show the full content
                 elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+            }
+
+            // Handles the change between the choice of sequential and diverging palettes
+            function changePaletteList(el) {
+                // remove/add the hideContent class to the palette lists
+                document.getElementById('paletteSequential').classList.toggle('hideContent');
+                document.getElementById('paletteDiverging').classList.toggle('hideContent');
+
+                updatePalette(document.getElementById('palette' + el.value));
             }
             // =========
 
@@ -485,6 +548,35 @@
             function checkTitle(el) {
                 vegaLiteSpec.title.text = el.value;     // set the title based on the content provided by the user
                 createVisualisation();                  // update the visualisation
+            }
+
+            // Updates the palette scheme name used by the visualisaton
+            function updatePalette(el) {
+                var paletteName = el.value;
+                var paletteCustom = document.getElementById('paletteCustom');           // the container for the custom text box
+                var paletteOther = document.getElementById('paletteOther');             // the custom text box
+                var paletteSequential = document.getElementById('paletteSequential');   // the sequential palette select list
+                var paletteDiverging = document.getElementById('paletteDiverging');     // the diverging palette select list
+
+                if (paletteName == 'other') {
+                    // we need to make sure that the "other" palette text box is visible
+                    if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
+
+                    // load the value from the text box ready for further testing below - it could be blank or have a previous value entered by the user
+                    paletteName = paletteOther.value;
+                }
+                else {
+                    // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
+                    if ((el == paletteSequential || el == paletteDiverging) && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
+                }
+
+
+                if (paletteName !== '' && paletteName !== null) {
+                    // TODO: Need another textbox to appear when diverging is selected for the middle value
+
+                    vegaLiteSpec.encoding.color.scale.scheme = paletteName;     // uses the value from whichever palette list is active, or the custom text box if the palette list option is "other"
+                    createVisualisation();                                      // update the visualisation
+                }
             }
             // =========
 
