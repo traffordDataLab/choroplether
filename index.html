@@ -417,13 +417,13 @@
             // ========= File loading capabilities, either from the local device or remotely =========
             // Attempt to obtain a local file prior to processing
             function localFileLoader(src, dest) {
-                if (src.value != '') {
+                if (src.value !== '') {
                     try {
                         var reader = new FileReader();
                	        reader.onload = function (e) {
                             destEl = document.getElementById(dest);
                             destEl.value = e.target.result;
-                            (dest == 'data') ? checkData(destEl) : checkGeography(destEl);
+                            (dest === 'data') ? checkData(destEl) : checkGeography(destEl);
                	        };
                         reader.readAsText(src.files[0]);
                         src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
@@ -438,7 +438,7 @@
             // Attempt to obtain a remote file via URL
             function remoteFileLoader(url) {
                 labAjax(url, function (data) {
-                    if (data == null || data == '') {
+                    if (data === null || data === '') {
                         alertify.alert('Sorry, data couldn\'t be loaded...', 'Please check you entered the URL correctly. If so, it may be that the file no longer exists, the URL has changed or the server rejected the request.');
                         return false;
                     }
@@ -455,7 +455,7 @@
                 // Only do something if there is content within the data box
                 if (el.value !== '' && el.value !== null) {
                     // Is the content a URL (must be https://) or pasted data?
-                    if (el.value.substring(0, 8) == 'https://') {
+                    if (el.value.substring(0, 8) === 'https://') {
                         vegaLiteSpec.transform[0].from.data = {
                             "url": el.value
                         }
@@ -498,7 +498,7 @@
             function checkGeographyChoice(el) {
                 var customGeogContainer = document.getElementById('geographyCustom');
 
-                if (el.value == 'other') {
+                if (el.value === 'other') {
                     customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
                     // NOTE: the onchange event of the 'geography' textbox calls checkGeography()
                 }
@@ -523,9 +523,9 @@
                     }
 
                     // Is the content a URL (must be https://) or pasted data?
-                    if (el.value.substring(0, 8) == 'https://') {
+                    if (el.value.substring(0, 8) === 'https://') {
                         vegaLiteSpec.data.url = el.value;   // create a URL object and set it to the value chosen in the geography select list
-                        createVisualisation();          // update the visualisation
+                        createVisualisation();              // update the visualisation
                     }
                     else {
                         // the data must be in the box directly, either pasted or loaded locally
@@ -558,7 +558,7 @@
                 var paletteSequential = document.getElementById('paletteSequential');   // the sequential palette select list
                 var paletteDiverging = document.getElementById('paletteDiverging');     // the diverging palette select list
 
-                if (paletteName == 'other') {
+                if (paletteName === 'other') {
                     // we need to make sure that the "other" palette text box is visible
                     if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
 
@@ -567,11 +567,11 @@
                 }
                 else {
                     // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
-                    if ((el == paletteSequential || el == paletteDiverging) && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
+                    if ((el === paletteSequential || el === paletteDiverging) && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
                 }
 
 
-                if (paletteName !== '' && paletteName !== null) {
+                if (paletteName !== '' && paletteName !== null && paletteName !== 'other') {
                     // TODO: Need another textbox to appear when diverging is selected for the middle value
 
                     vegaLiteSpec.encoding.color.scale.scheme = paletteName;     // uses the value from whichever palette list is active, or the custom text box if the palette list option is "other"
@@ -591,7 +591,7 @@
                 // Embed the Vega-lite visualisation
                 vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(console.warn);
 
-                if (vizContainer.innerHTML == '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
+                if (vizContainer.innerHTML === '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
             }
         </script>
     </body>
