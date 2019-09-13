@@ -96,24 +96,9 @@
                 padding-top: 10px;
             }
 
-            #vizTitle, #paletteOther
+            #vizTitle, #palette
             {
                 width: 50%
-            }
-
-            /* Palette Radio Buttons */
-            #paletteScheme input[type="radio"] {
-              visibility: hidden;
-            }
-
-            #paletteScheme span {
-              padding-top: 5px;
-              padding-bottom: 5px;
-              margin-left: -23px;
-            }
-
-            #paletteScheme input[type="radio"]:checked+span {
-              background-color: #fc6721;
             }
 
             /* Overridden styles from labBase.css */
@@ -226,46 +211,31 @@
                         <div id="designForm" class="hideContent">
                             <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
                             <br /><br />
-                            Palette:<br />
-                            <div id="paletteScheme">
-                                <label>
-                                    <input type="radio" name="paletteScheme" value="Sequential" checked="checked" onChange="changePaletteList(this)"/>
-                                    <span class="labButton">Sequential</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="paletteScheme" value="Diverging" onChange="changePaletteList(this)"/>
-                                    <span class="labButton">Diverging</span>
-                                </label>
-                            </div>
-                            <br />
                             Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
                             <br />
-                            <select id="paletteSequential" onchange="updatePalette(this)">
+                            <select id="paletteList" onchange="updatePalette(this)">
                                 <optgroup label="Sequential Single-Hue">
                                     <option value="blues">blues</option>
+                                    <option value="browns">browns</option>
                                     <option value="greens">greens</option>
                                     <option value="oranges" selected="selected">oranges</option>
+                                    <option value="teals">teals</option>
+                                    <option value="warmgreys">warmgreys</option>
                                 </optgroup>
                                 <optgroup label="Sequential Multi-Hue">
+                                    <option value="bluepurple">bluepurple</option>
+                                    <option value="goldgreen">goldgreen</option>
                                     <option value="inferno">inferno</option>
                                     <option value="viridis">viridis</option>
-                                </optgroup>
-                                <option value="other">Other (custom)...</option>
-                            </select>
-                            <select id="paletteDiverging" onchange="updatePalette(this)" class="hideContent">
-                                <optgroup label="Diverging">
-                                    <option value="blueorange" selected="selected">blueorange</option>
-                                    <option value="purplegreen">purplegreen</option>
-                                    <option value="purpleorange">purpleorange</option>
-                                    <option value="redyellowgreen">redyellowgreen</option>
-                                    <option value="spectral">spectral</option>
+                                    <option value="yellowgreenblue">yellowgreenblue</option>
+                                    <option value="yelloworangered">yelloworangered</option>
                                 </optgroup>
                                 <option value="other">Other (custom)...</option>
                             </select>
 
                             <div id="paletteCustom" class="hideContent">
                                 <br />
-                                <label for="paletteOther">Enter a valid <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="paletteOther" name="paletteOther" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                <label for="palette">Enter a sequential <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="palette" name="palette" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
                                 <br />
                             </div>
                         </div>
@@ -358,7 +328,7 @@
                     "color": {
                         "field": "value",
                         "scale": {
-                            "scheme": document.getElementById("paletteSequential").value
+                            "scheme": document.getElementById("paletteList").value
                         },
                         "type": "quantitative",
                         "legend": {
@@ -387,6 +357,51 @@
                 }
             }
 
+            // List of all valid Vega sequential palettes which the user can enter into the 'other' palette input box
+            var vegaLiteSequentialPalettes = {
+                // single-hue
+                'blues': true,
+                'tealblues': true,
+                'teals': true,
+                'greens': true,
+                'browns': true,
+                'oranges': true,
+                'reds': true,
+                'purples': true,
+                'warmgreys': true,
+                'greys': true,
+                // multi-hue
+                'viridis': true,
+                'magma': true,
+                'inferno': true,
+                'plasma': true,
+                'bluegreen': true,
+                'bluepurple': true,
+                'goldgreen': true,
+                'goldorange': true,
+                'goldred': true,
+                'greenblue': true,
+                'orangered': true,
+                'purplebluegreen': true,
+                'purpleblue': true,
+                'purplered': true,
+                'redpurple': true,
+                'yellowgreenblue': true,
+                'yellowgreen': true,
+                'yelloworangebrown': true,
+                'yelloworangered': true,
+                'darkblue': true,
+                'darkgold': true,
+                'darkgreen': true,
+                'darkmulti': true,
+                'darkred': true,
+                'lightgreyred': true,
+                'lightgreyteal': true,
+                'lightmulti': true,
+                'lightorange': true,
+                'lighttealblue': true
+            }
+
 
             // ========= UI operations =========
             // Performs CSS class add/remove etc. to show/hide content sections
@@ -401,15 +416,6 @@
 
                 elementMessage.classList.toggle('hideContent'); // message to show the full content
                 elementForm.classList.toggle('hideContent');    // the main content of the fieldset
-            }
-
-            // Handles the change between the choice of sequential and diverging palettes
-            function changePaletteList(el) {
-                // remove/add the hideContent class to the palette lists
-                document.getElementById('paletteSequential').classList.toggle('hideContent');
-                document.getElementById('paletteDiverging').classList.toggle('hideContent');
-
-                updatePalette(document.getElementById('palette' + el.value));
             }
             // =========
 
@@ -497,15 +503,14 @@
             // Handle the UI changes based on the selection in the geography list
             function checkGeographyChoice(val) {
                 var customGeogContainer = document.getElementById('geographyCustom');
-                var geographyOther = document.getElementById('geography');
                 var geogVal = val;
 
                 if (geogVal === 'other') {
                     customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
-                    geogVal = geographyOther.value // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
+                    geogVal = document.getElementById('geography').value    // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
                 }
                 else if (!customGeogContainer.classList.contains('hideContent')) {
-                    customGeogContainer.classList.add('hideContent');   // add the 'hideContent' class to the custom geography div
+                    customGeogContainer.classList.add('hideContent');       // add the 'hideContent' class to the custom geography div
                 }
 
                 checkGeography(geogVal);
@@ -554,29 +559,33 @@
             // Updates the palette scheme name used by the visualisaton
             function updatePalette(el) {
                 var paletteName = el.value;
+                var paletteList = document.getElementById('paletteList');               // the palette select list
                 var paletteCustom = document.getElementById('paletteCustom');           // the container for the custom text box
-                var paletteOther = document.getElementById('paletteOther');             // the custom text box
-                var paletteSequential = document.getElementById('paletteSequential');   // the sequential palette select list
-                var paletteDiverging = document.getElementById('paletteDiverging');     // the diverging palette select list
 
                 if (paletteName === 'other') {
                     // we need to make sure that the "other" palette text box is visible
                     if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
 
                     // load the value from the text box ready for further testing below - it could be blank or have a previous value entered by the user
-                    paletteName = paletteOther.value;
+                    paletteName = document.getElementById('palette').value;
                 }
                 else {
                     // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
-                    if ((el === paletteSequential || el === paletteDiverging) && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
+                    if (el === paletteList && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
                 }
 
 
                 if (paletteName !== '' && paletteName !== null && paletteName !== 'other') {
-                    // TODO: Need another textbox to appear when diverging is selected for the middle value
-
-                    vegaLiteSpec.encoding.color.scale.scheme = paletteName;     // uses the value from whichever palette list is active, or the custom text box if the palette list option is "other"
-                    createVisualisation();                                      // update the visualisation
+                    // Ensure that the value given is a valid sequential palette scheme.
+                    // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
+                    // If there is it will return true, otherwise null - saves looping through an array etc.
+                    if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
+                        vegaLiteSpec.encoding.color.scale.scheme = paletteName;     // uses the value from the palette list or the custom text box if the palette list option is "other"
+                        createVisualisation();                                      // update the visualisation
+                    }
+                    else {
+                        alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
+                    }
                 }
             }
             // =========
