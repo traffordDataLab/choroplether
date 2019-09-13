@@ -187,7 +187,7 @@
                         <div id="geographyForm" class="hideContent">
                             Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
                             <br />
-                            <select id="geographyList" onchange="checkGeographyChoice(this)">
+                            <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                 <optgroup label="Electoral Ward">
                                     <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
                                     <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
@@ -215,7 +215,7 @@
                                     <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
                                     <li>Paste the data directly into the box.</li>
                                 </ul>
-                                <textarea id="geography" onChange="checkGeography(this)"></textarea>
+                                <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
                             </div>
                         </div>
                     </fieldset>
@@ -224,7 +224,7 @@
                         <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
                         <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
                         <div id="designForm" class="hideContent">
-                            <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this)"/>
+                            <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
                             <br /><br />
                             Palette:<br />
                             <div id="paletteScheme">
@@ -495,26 +495,27 @@
             }
 
             // Handle the UI changes based on the selection in the geography list
-            function checkGeographyChoice(el) {
+            function checkGeographyChoice(val) {
                 var customGeogContainer = document.getElementById('geographyCustom');
+                var geographyOther = document.getElementById('geography');
+                var geogVal = val;
 
-                if (el.value === 'other') {
+                if (geogVal === 'other') {
                     customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
-                    // NOTE: the onchange event of the 'geography' textbox calls checkGeography()
+                    geogVal = geographyOther.value // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
                 }
-                else {
-                    if (!customGeogContainer.classList.contains('hideContent')) {
-                        customGeogContainer.classList.add('hideContent');   // add the 'hideContent' class to the custom geography div
-                        document.getElementById('geography').value = '';    // clear any content present in the custom geography box;
-                    }
+                else if (!customGeogContainer.classList.contains('hideContent')) {
+                    customGeogContainer.classList.add('hideContent');   // add the 'hideContent' class to the custom geography div
+                }
 
-                    checkGeography(el);
-                }
+                checkGeography(geogVal);
             }
 
             // Check the input provided for the geography of the visualisaton
-            function checkGeography(el) {
-                if (el.value !== '' && el.value !== null) {
+            function checkGeography(val) {
+                var geogVal = val;
+
+                if (geogVal !== '' && geogVal !== null && geogVal !== 'other') {
                     // Set up the common objects of the geography
                     vegaLiteSpec.data = {
                         "format": {
@@ -523,8 +524,8 @@
                     }
 
                     // Is the content a URL (must be https://) or pasted data?
-                    if (el.value.substring(0, 8) === 'https://') {
-                        vegaLiteSpec.data.url = el.value;   // create a URL object and set it to the value chosen in the geography select list
+                    if (geogVal.substring(0, 8) === 'https://') {
+                        vegaLiteSpec.data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
                         createVisualisation();              // update the visualisation
                     }
                     else {
@@ -532,7 +533,7 @@
                         // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
 
                         try {
-                            var data = JSON.parse(el.value);    // as GeoJSON is valid JSON, attempt to parse it
+                            var data = JSON.parse(geogVal);     // as GeoJSON is valid JSON, attempt to parse it
                             vegaLiteSpec.data.values = data;
                             createVisualisation();              // update the visualisation
                         }
@@ -545,9 +546,9 @@
             }
 
             // Check the input provided for the visualisation title
-            function checkTitle(el) {
-                vegaLiteSpec.title.text = el.value;     // set the title based on the content provided by the user
-                createVisualisation();                  // update the visualisation
+            function checkTitle(val) {
+                vegaLiteSpec.title.text = val;       // set the title based on the content provided by the user
+                createVisualisation();               // update the visualisation
             }
 
             // Updates the palette scheme name used by the visualisaton
