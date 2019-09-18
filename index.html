@@ -49,7 +49,7 @@
 
             fieldset textarea
             {
-                width: 50%;
+                width: 45%;
                 height: 6em;
                 min-height: 6em;
                 float: right;
@@ -77,6 +77,13 @@
                 color: #757575;
             }
 
+            #toolsPanel
+            {
+                width: 500px;
+                float: left;
+                margin-right: 20px;
+            }
+
             #headerTitle
             {
               padding-top: 10px;
@@ -94,6 +101,7 @@
             #vegaLiteViz
             {
                 padding-top: 10px;
+                float: left;
             }
 
             #vizTitle, #palette
@@ -145,7 +153,7 @@
             <div class="main">
                 <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="tutorial.html">tutorial</a> for more information and a demonstration of how to use the application.</p>
 
-                <div class="singleColumn">
+                <div id="toolsPanel">
                     <!-- File loading form elements (hidden via CSS) START -->
                     <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
                     <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
@@ -155,12 +163,12 @@
                         <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
                         <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
                         <div id="dataForm">
-                            Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, using one of the following methods:<br />(Click on the links to download an example of each type of file.)
+                            Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, (use the links to view an example of each type of file), using one of the following methods:
                             <br />
                             <ul>
                                 <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
-                                <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                <li>Paste the data directly into the box.</li>
+                                <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                <li>Enter data directly into the box</li>
                             </ul>
                             <textarea id="data" onChange="checkData(this)"></textarea>
                         </div>
@@ -197,8 +205,8 @@
                                 <br />
                                 <ul>
                                     <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
-                                    <li>Enter the <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                    <li>Paste the data directly into the box.</li>
+                                    <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                    <li>Enter data directly into the box</li>
                                 </ul>
                                 <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
                             </div>
@@ -241,9 +249,8 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="singleColumn">
-                    <div id="vegaLiteViz"></div>
-                </div>
+                <div id="vegaLiteViz"></div>
+                <br class="noFloat"/>
             </div>
 
             <div class="footer">
