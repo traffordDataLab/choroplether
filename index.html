@@ -43,18 +43,15 @@
 
             fieldset ul
             {
-                float: left;        /* so that the textboxes can float next to the list */
                 padding-left: 1em;  /* don't indent the list past the left margin of the other content */
             }
 
             fieldset textarea
             {
-                width: 45%;
+                width: 100%;
                 height: 6em;
                 min-height: 6em;
-                float: right;
                 resize: vertical;
-                margin-top: 1em;
             }
 
             label
@@ -85,16 +82,16 @@
 
             #toolsPanel
             {
-                max-width: 500px;
+                max-width: 400px;
                 float: left;
             }
 
             #headerTitle
             {
-              padding-top: 10px;
-              padding-left: 10px;
-              font-size: 20px;
-              color: #757575;
+                padding-top: 10px;
+                padding-left: 10px;
+                font-size: 20px;
+                color: #757575;
             }
 
             #labLogo, #headerTitle
@@ -129,6 +126,7 @@
                 #toolsPanel
                 {
                     width: 500px;
+                    max-width: 500px;
                 }
             }
 
@@ -158,7 +156,7 @@
 
             .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok, .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-cancel
             {
-                    color: #fc6721;
+                color: #fc6721;
             }
 
             .alertify button:focus, .alertify input:focus
@@ -188,12 +186,12 @@
                             <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">Provide the data...</div>
                             <div id="dataForm">
-                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, (use the links to view an example of each type of file), using one of the following methods:
+                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format (use the links to view an example of each type of file) by:
                                 <br />
                                 <ul>
-                                    <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
-                                    <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                    <li>Enter data directly into the box</li>
+                                    <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choosing a file</span> from your device,</li>
+                                    <li>Entering a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box or,</li>
+                                    <li>Entering data directly into the box</li>
                                 </ul>
                                 <textarea id="data" onChange="checkData(this)"></textarea>
                             </div>
@@ -226,12 +224,12 @@
 
                                 <div id="geographyCustom" class="hideContent">
                                     <br />
-                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:
+                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format by:
                                     <br />
                                     <ul>
-                                        <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
-                                        <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                        <li>Enter data directly into the box</li>
+                                        <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choosing a file</span> from your device,</li>
+                                        <li>Entering a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box or,</li>
+                                        <li>Entering data directly into the box</li>
                                     </ul>
                                     <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
                                 </div>
@@ -242,7 +240,7 @@
                             <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
                             <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">Customise the output...</div>
                             <div id="designForm" class="hideContent">
-                                Customise the output by changing the palette, supplying a title etc.
+                                Customise the output of the visualisation.
                                 <br /><br />
                                 <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
                                 <br /><br />
