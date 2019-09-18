@@ -77,11 +77,16 @@
                 color: #757575;
             }
 
+            #layoutContainer
+            {
+                max-width: 1050px;
+                margin: auto;
+            }
+
             #toolsPanel
             {
-                width: 500px;
+                max-width: 500px;
                 float: left;
-                margin-right: 20px;
             }
 
             #headerTitle
@@ -101,13 +106,32 @@
             #vegaLiteViz
             {
                 padding-top: 10px;
-                float: left;
+                float: right;
             }
 
             #vizTitle, #palette
             {
                 width: 50%
             }
+
+            @media (max-width:1080px)
+            {
+                #layoutContainer
+                {
+                    width: 500px;
+                }
+
+                #vegaLiteViz
+                {
+                    float: none;
+                }
+
+                #toolsPanel
+                {
+                    width: 500px;
+                }
+            }
+
 
             /* Overridden styles from labBase.css */
             .labButton
@@ -153,103 +177,105 @@
             <div class="main">
                 <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="tutorial.html">tutorial</a> for more information and a demonstration of how to use the application.</p>
 
-                <div id="toolsPanel">
-                    <!-- File loading form elements (hidden via CSS) START -->
-                    <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
-                    <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
-                    <!-- File loading elements END -->
+                <div id="layoutContainer">
+                    <div id="toolsPanel">
+                        <!-- File loading form elements (hidden via CSS) START -->
+                        <input type="file" id="localFileData" class="hideContent" onChange="localFileLoader(this,'data')"/>
+                        <input type="file" id="localFileGeography" class="hideContent" onChange="localFileLoader(this,'geography')"/>
+                        <!-- File loading elements END -->
 
-                    <fieldset>
-                        <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
-                        <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
-                        <div id="dataForm">
-                            Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, (use the links to view an example of each type of file), using one of the following methods:
-                            <br />
-                            <ul>
-                                <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
-                                <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
-                                <li>Enter data directly into the box</li>
-                            </ul>
-                            <textarea id="data" onChange="checkData(this)"></textarea>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
-                        <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
-                        <div id="geographyForm" class="hideContent">
-                            Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
-                            <br />
-                            <select id="geographyList" onchange="checkGeographyChoice(this.value)">
-                                <optgroup label="Electoral Ward">
-                                    <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
-                                    <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
-                                </optgroup>
-                                <optgroup label="Lower Layer Super Output Area (LSOA)">
-                                    <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/trafford_lsoa_generalised.geojson">Trafford LSOAs</option>
-                                    <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/gm_lsoa_generalised.geojson">Greater Manchester LSOAs</option>
-                                </optgroup>
-                                <optgroup label="Middle Layer Super Output Area (MSOA)">
-                                    <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/trafford_msoa_generalised.geojson">Trafford MSOAs</option>
-                                    <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs</option>
-                                </optgroup>
-                                <optgroup label="Miscellaneous">
-                                    <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
-                                </optgroup>
-                                <option value="other">Other (custom)...</option>
-                            </select>
-
-                            <div id="geographyCustom" class="hideContent">
-                                <br />
-                                Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:
+                        <fieldset>
+                            <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
+                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
+                            <div id="dataForm">
+                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, (use the links to view an example of each type of file), using one of the following methods:
                                 <br />
                                 <ul>
-                                    <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
+                                    <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choose a file</span> from your device</li>
                                     <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
                                     <li>Enter data directly into the box</li>
                                 </ul>
-                                <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
+                                <textarea id="data" onChange="checkData(this)"></textarea>
                             </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
 
-                    <fieldset>
-                        <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
-                        <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
-                        <div id="designForm" class="hideContent">
-                            <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
-                            <br /><br />
-                            Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
-                            <br />
-                            <select id="paletteList" onchange="updatePalette(this)">
-                                <optgroup label="Sequential Single-Hue">
-                                    <option value="blues">blues</option>
-                                    <option value="browns">browns</option>
-                                    <option value="greens">greens</option>
-                                    <option value="oranges" selected="selected">oranges</option>
-                                    <option value="teals">teals</option>
-                                    <option value="warmgreys">warmgreys</option>
-                                </optgroup>
-                                <optgroup label="Sequential Multi-Hue">
-                                    <option value="bluepurple">bluepurple</option>
-                                    <option value="goldgreen">goldgreen</option>
-                                    <option value="inferno">inferno</option>
-                                    <option value="viridis">viridis</option>
-                                    <option value="yellowgreenblue">yellowgreenblue</option>
-                                    <option value="yelloworangered">yelloworangered</option>
-                                </optgroup>
-                                <option value="other">Other (custom)...</option>
-                            </select>
+                        <fieldset>
+                            <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
+                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
+                            <div id="geographyForm" class="hideContent">
+                                Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                                <br />
+                                <select id="geographyList" onchange="checkGeographyChoice(this.value)">
+                                    <optgroup label="Electoral Ward">
+                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
+                                    </optgroup>
+                                    <optgroup label="Lower Layer Super Output Area (LSOA)">
+                                        <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/trafford_lsoa_generalised.geojson">Trafford LSOAs</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2011/gm_lsoa_generalised.geojson">Greater Manchester LSOAs</option>
+                                    </optgroup>
+                                    <optgroup label="Middle Layer Super Output Area (MSOA)">
+                                        <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/trafford_msoa_generalised.geojson">Trafford MSOAs</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs</option>
+                                    </optgroup>
+                                    <optgroup label="Miscellaneous">
+                                        <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
+                                    </optgroup>
+                                    <option value="other">Other (custom)...</option>
+                                </select>
 
-                            <div id="paletteCustom" class="hideContent">
-                                <br />
-                                <label for="palette">Enter a sequential <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="palette" name="palette" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
-                                <br />
+                                <div id="geographyCustom" class="hideContent">
+                                    <br />
+                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format using one of the following methods:
+                                    <br />
+                                    <ul>
+                                        <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choose a file</span> from your device</li>
+                                        <li>Enter a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box</li>
+                                        <li>Enter data directly into the box</li>
+                                    </ul>
+                                    <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
+                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
+                            <div id="designForm" class="hideContent">
+                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
+                                <br /><br />
+                                Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                                <br />
+                                <select id="paletteList" onchange="updatePalette(this)">
+                                    <optgroup label="Sequential Single-Hue">
+                                        <option value="blues">blues</option>
+                                        <option value="browns">browns</option>
+                                        <option value="greens">greens</option>
+                                        <option value="oranges" selected="selected">oranges</option>
+                                        <option value="teals">teals</option>
+                                        <option value="warmgreys">warmgreys</option>
+                                    </optgroup>
+                                    <optgroup label="Sequential Multi-Hue">
+                                        <option value="bluepurple">bluepurple</option>
+                                        <option value="goldgreen">goldgreen</option>
+                                        <option value="inferno">inferno</option>
+                                        <option value="viridis">viridis</option>
+                                        <option value="yellowgreenblue">yellowgreenblue</option>
+                                        <option value="yelloworangered">yelloworangered</option>
+                                    </optgroup>
+                                    <option value="other">Other (custom)...</option>
+                                </select>
+
+                                <div id="paletteCustom" class="hideContent">
+                                    <br />
+                                    <label for="palette">Enter a sequential <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="palette" name="palette" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                    <br />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div id="vegaLiteViz"></div>
                 </div>
-                <div id="vegaLiteViz"></div>
                 <br class="noFloat"/>
             </div>
 
@@ -301,7 +327,7 @@
                 "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
                 "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
                 "autosize": "fit",
-                "width": 600,
+                "width": 500,
                 "height": 500,
                 "title": {
                     "text": "",
