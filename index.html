@@ -186,7 +186,7 @@
 
                         <fieldset>
                             <legend onclick="toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></legend>
-                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">expand this section to view options...</div>
+                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">Provide the data...</div>
                             <div id="dataForm">
                                 Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format, (use the links to view an example of each type of file), using one of the following methods:
                                 <br />
@@ -201,7 +201,7 @@
 
                         <fieldset>
                             <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
-                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">expand this section to view options...</div>
+                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">Choose a geography...</div>
                             <div id="geographyForm" class="hideContent">
                                 Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
                                 <br />
@@ -240,8 +240,10 @@
 
                         <fieldset>
                             <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
-                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">expand this section to view options...</div>
+                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">Customise the output...</div>
                             <div id="designForm" class="hideContent">
+                                Customise the output by changing the palette, supplying a title etc.
+                                <br /><br />
                                 <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="checkTitle(this.value)"/>
                                 <br /><br />
                                 Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
