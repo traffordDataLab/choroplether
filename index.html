@@ -271,13 +271,26 @@
                                     <label for="palette">Enter a sequential <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="palette" name="palette" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
                                     <br />
                                 </div>
-                                <br />
-                                <label for="intervalList">Interval:</label>
-                                <select id="intervalList" onchange="updateInterval(this.value)">
-                                    <option value="linear" selected="selected">Linear</option>
-                                    <option value="quantile">Quantile</option>
-                                    <option value="quantize">Quantize</option>
-                                </select>
+                                <p>
+                                    Select the type of scale<span id="intervalsMsg" class="hideContent"> and number of intervals</span> to use.
+                                    <br />
+                                    <label for="scaleList">Scale:</label>
+                                    <select id="scaleList" onchange="updateScale(this.value)">
+                                        <option value="linear" selected="selected">Linear</option>
+                                        <option value="quantile">Quantile</option>
+                                        <option value="quantize">Equal intervals</option>
+                                    </select>
+                                    <span id="intervalsContainer" class="hideContent">
+                                        &nbsp;&nbsp;
+                                        <label for="intervalsList">Intervals:</label>
+                                        <select id="intervalsList" onchange="updateIntervals(this.value)">
+                                            <option value="4" selected="selected">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                        </select>
+                                    </span>
+                                </p>
                             </div>
                         </fieldset>
                     </div>
@@ -368,8 +381,11 @@
                     "color": {
                         "field": "value",
                         "scale": {
-                            "scheme": document.getElementById("paletteList").value,
-                            "type": document.getElementById("intervalList").value
+                            "scheme": {
+                                "name": document.getElementById("paletteList").value,
+                                "count": ""
+                            },
+                            "type": document.getElementById("scaleList").value
                         },
                         "type": "quantitative",
                         "legend": {
@@ -621,8 +637,8 @@
                     // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
                     // If there is it will return true, otherwise null - saves looping through an array etc.
                     if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
-                        vegaLiteSpec.encoding.color.scale.scheme = paletteName;     // uses the value from the palette list or the custom text box if the palette list option is "other"
-                        createVisualisation();                                      // update the visualisation
+                        vegaLiteSpec.encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
+                        createVisualisation();                                          // update the visualisation
                     }
                     else {
                         alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
@@ -630,9 +646,36 @@
                 }
             }
 
-            // Update the interval method
-            function updateInterval(val) {
-                vegaLiteSpec.encoding.color.scale.type = val;
+            // Update the scale method, e.g. linear, quantile, quantize
+            function updateScale(val) {
+                var intervalsContainer = document.getElementById('intervalsContainer');     // the span around the intervals list
+                var intervalsMsg = document.getElementById('intervalsMsg');                 // the span around the wording " and number of intervals"
+
+                // Handle whether the breaks select list should be visible or not
+                if (val === 'linear') {
+                    // Intervals list should be hidden
+                    if (!intervalsContainer.classList.contains('hideContent')) {
+                        intervalsContainer.classList.add('hideContent');
+                        intervalsMsg.classList.add('hideContent');
+                    }
+                    vegaLiteSpec.encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
+                }
+                else {
+                    // Intervals list should be visible
+                    if (intervalsContainer.classList.contains('hideContent')) {
+                        intervalsContainer.classList.remove('hideContent');
+                        intervalsMsg.classList.remove('hideContent');
+                    }
+                    vegaLiteSpec.encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
+                }
+
+                vegaLiteSpec.encoding.color.scale.type = val;   // set the interval type in the spec
+                createVisualisation();
+            }
+
+            // Update the number of breaks to use
+            function updateIntervals(val) {
+                vegaLiteSpec.encoding.color.scale.scheme.count = val;
                 createVisualisation();
             }
             // =========
