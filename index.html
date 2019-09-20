@@ -88,16 +88,10 @@
 
             #headerTitle
             {
-                padding-top: 10px;
-                padding-left: 10px;
+                display: inline-block;
+                padding-top: 19px;
                 font-size: 20px;
                 color: #757575;
-            }
-
-            #labLogo, #headerTitle
-            {
-                float: left;
-                display: inline-block;
             }
 
             #vegaLiteViz
@@ -140,6 +134,12 @@
             }
 
             /* Overridden styles from labWebsite.css */
+            .traffordDataLabLogo
+            {
+                float: left;
+                padding-bottom: 9px;
+            }
+
             @media (max-width:620px)
             {
                 .main
@@ -168,8 +168,8 @@
     <body>
         <div class="container">
             <div class="header">
-                <div id="labLogo"><a href="https://www.trafforddatalab.io/index.html"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a></div>
-                <div id="headerTitle">Choroplether</div>
+                <a href="https://www.trafforddatalab.io/index.html"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
+                <span id="headerTitle">Choroplether</span>
             </div>
 
             <div class="main">
