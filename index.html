@@ -689,7 +689,7 @@
                 vizContainer.innerHTML = '';
 
                 // Embed the Vega-lite visualisation
-                vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(console.warn);
+                vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true, renderer: 'svg'}).catch(console.warn);
 
                 if (vizContainer.innerHTML === '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
             }
