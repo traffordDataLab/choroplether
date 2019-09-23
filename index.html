@@ -341,357 +341,363 @@
                                 Trafford Data Lab:
 
             */
+            var layoutContainer = document.getElementById('layoutContainer');   // the UI interface container
+            var vizContainer = document.getElementById('vegaLiteViz');          // the DIV where the visualisation is created
 
-            // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
-            var vegaLiteSpec = {
-                "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
-                "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
-                "autosize": "fit",
-                "width": 500,
-                "height": 500,
-                "title": {
-                    "text": "",
-                    "font": "Roboto",
-                    "color": "#757575"
-                },
-                "data": {
-                    "url": document.getElementById("geographyList").value,
-                    "format": {
-                        "property": "features"
-                    }
-                },
-                "transform": [
-                    {
-                        "lookup": "properties.area_code",
-                        "from": {
-                            "key": "area_code",
-                            "fields": ["value"]
-                        }
-                    }
-                ],
-                "mark": {
-                    "type": "geoshape",
-                    "stroke": "white",
-                    "strokeWidth": 1
-                },
-                "projection": {
-                    "type": "mercator"
-                },
-                "encoding": {
-                    "color": {
-                        "field": "value",
-                        "scale": {
-                            "scheme": {
-                                "name": document.getElementById("paletteList").value,
-                                "count": ""
-                            },
-                            "type": document.getElementById("scaleList").value
-                        },
-                        "type": "quantitative",
-                        "legend": {
-                            "title": null,
-                            "direction": "horizontal",
-                            "orient": "bottom"
-                        }
+            // Test that we're not in IE11 or worse
+            if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > -1) {
+                layoutContainer.innerHTML = '<h2>Unfortunately you need a modern browser to create Vega-Lite visualisations. Please upgrade or use this app in another browser.</h2>';
+            }
+            else {
+                // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
+                var vegaLiteSpec = {
+                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
+                    "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
+                    "autosize": "fit",
+                    "width": 500,
+                    "height": 500,
+                    "title": {
+                        "text": "",
+                        "font": "Roboto",
+                        "color": "#757575"
                     },
-                    "tooltip": [
-                        {
-                            "field": "properties.area_name",
-                            "type": "nominal",
-                            "title": "Area"
-                        },
-                        {
-                            "field": "value",
-                            "type": "quantitative",
-                            "title": "Value"
-                        }
-                    ]
-                },
-                "config": {
-                    "view": {
-                        "stroke": "transparent"
-                    }
-                }
-            }
-
-            // List of all valid Vega sequential palettes which the user can enter into the 'other' palette input box
-            var vegaLiteSequentialPalettes = {
-                // single-hue
-                'blues': true,
-                'tealblues': true,
-                'teals': true,
-                'greens': true,
-                'browns': true,
-                'oranges': true,
-                'reds': true,
-                'purples': true,
-                'warmgreys': true,
-                'greys': true,
-                // multi-hue
-                'viridis': true,
-                'magma': true,
-                'inferno': true,
-                'plasma': true,
-                'bluegreen': true,
-                'bluepurple': true,
-                'goldgreen': true,
-                'goldorange': true,
-                'goldred': true,
-                'greenblue': true,
-                'orangered': true,
-                'purplebluegreen': true,
-                'purpleblue': true,
-                'purplered': true,
-                'redpurple': true,
-                'yellowgreenblue': true,
-                'yellowgreen': true,
-                'yelloworangebrown': true,
-                'yelloworangered': true,
-                'darkblue': true,
-                'darkgold': true,
-                'darkgreen': true,
-                'darkmulti': true,
-                'darkred': true,
-                'lightgreyred': true,
-                'lightgreyteal': true,
-                'lightmulti': true,
-                'lightorange': true,
-                'lighttealblue': true
-            }
-
-
-            // ========= UI operations =========
-            // Performs CSS class add/remove etc. to show/hide content sections
-            function toggleContentSection(name) {
-                var elementIcon = document.getElementById(name + 'Toggle');
-                var elementMessage = document.getElementById(name + 'ShowContent');
-                var elementForm = document.getElementById(name + 'Form');
-
-                // Font Awesome icon in the legend
-                elementIcon.classList.toggle('fa-minus');
-                elementIcon.classList.toggle('fa-plus');
-
-                elementMessage.classList.toggle('hideContent'); // message to show the full content
-                elementForm.classList.toggle('hideContent');    // the main content of the fieldset
-            }
-            // =========
-
-
-            // ========= File loading capabilities, either from the local device or remotely =========
-            // Attempt to obtain a local file prior to processing
-            function localFileLoader(src, dest) {
-                if (src.value !== '') {
-                    try {
-                        var reader = new FileReader();
-               	        reader.onload = function (e) {
-                            destEl = document.getElementById(dest);
-                            destEl.value = e.target.result;
-                            (dest === 'data') ? checkData(destEl) : checkGeography(destEl);
-               	        };
-                        reader.readAsText(src.files[0]);
-                        src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
-                    }
-                    catch(e) {
-                        // we can't use window.FileReader or something else went wrong so inform the user
-                        alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
-                    }
-                }
-            }
-
-            // Attempt to obtain a remote file via URL
-            function remoteFileLoader(url) {
-                labAjax(url, function (data) {
-                    if (data === null || data === '') {
-                        alertify.alert('Sorry, data couldn\'t be loaded...', 'Please check you entered the URL correctly. If so, it may be that the file no longer exists, the URL has changed or the server rejected the request.');
-                        return false;
-                    }
-
-                    processGeoJson(data);
-                }, { type: 'txt' });    // Don't get labAjax to do the parsing - just return the content as-is and we parse it in the processGeoJson function
-            }
-            // =========
-
-
-            // ========= Dynamic changes to the Vega-Lite specification based on user choices =========
-            // Check the input provided for the data of the visualisation
-            function checkData(el) {
-                // Only do something if there is content within the data box
-                if (el.value !== '' && el.value !== null) {
-                    // Is the content a URL (must be https://) or pasted data?
-                    if (el.value.substring(0, 8) === 'https://') {
-                        vegaLiteSpec.transform[0].from.data = {
-                            "url": el.value
-                        }
-                    }
-                    else {
-                        // the data must be in the box directly, either pasted or loaded locally
-                        // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
-
-                        var data = el.value;
-                        var format;
-
-                        try {
-                            data = JSON.parse(data);    // attempt to parse as JSON
-                            format = 'json';
-                        }
-                        catch(e) {
-                            // assumption now is that the data is CSV
-                            // the following regex lines deal with newline characters to ensure the data is presented correctly as a continous string within the Vega-Lite spec
-                            data = data.replace(/\\n/g, '\n');  // replace actual string occurences of "\n" with newline characters
-                            data = data.replace(/\n/g, '\n');   // replace any carriage returns with newline characters
-                            format = 'csv';
-
-                            el.value = data;    // update the input field with the cleaned output
-                        }
-
-                        // add the data to the Vega-Lite spec
-                        vegaLiteSpec.transform[0].from.data = {
-                            "values": data,
-                            "format": {
-                                "type": format
-                            }
-                        }
-                    }
-
-                    createVisualisation();          // update the visualisation
-                }
-            }
-
-            // Handle the UI changes based on the selection in the geography list
-            function checkGeographyChoice(val) {
-                var customGeogContainer = document.getElementById('geographyCustom');
-                var geogVal = val;
-
-                if (geogVal === 'other') {
-                    customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
-                    geogVal = document.getElementById('geography').value    // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
-                }
-                else if (!customGeogContainer.classList.contains('hideContent')) {
-                    customGeogContainer.classList.add('hideContent');       // add the 'hideContent' class to the custom geography div
-                }
-
-                checkGeography(geogVal);
-            }
-
-            // Check the input provided for the geography of the visualisaton
-            function checkGeography(val) {
-                var geogVal = val;
-
-                if (geogVal !== '' && geogVal !== null && geogVal !== 'other') {
-                    // Set up the common objects of the geography
-                    vegaLiteSpec.data = {
+                    "data": {
+                        "url": document.getElementById("geographyList").value,
                         "format": {
                             "property": "features"
                         }
+                    },
+                    "transform": [
+                        {
+                            "lookup": "properties.area_code",
+                            "from": {
+                                "key": "area_code",
+                                "fields": ["value"]
+                            }
+                        }
+                    ],
+                    "mark": {
+                        "type": "geoshape",
+                        "stroke": "white",
+                        "strokeWidth": 1
+                    },
+                    "projection": {
+                        "type": "mercator"
+                    },
+                    "encoding": {
+                        "color": {
+                            "field": "value",
+                            "scale": {
+                                "scheme": {
+                                    "name": document.getElementById("paletteList").value,
+                                    "count": ""
+                                },
+                                "type": document.getElementById("scaleList").value
+                            },
+                            "type": "quantitative",
+                            "legend": {
+                                "title": null,
+                                "direction": "horizontal",
+                                "orient": "bottom"
+                            }
+                        },
+                        "tooltip": [
+                            {
+                                "field": "properties.area_name",
+                                "type": "nominal",
+                                "title": "Area"
+                            },
+                            {
+                                "field": "value",
+                                "type": "quantitative",
+                                "title": "Value"
+                            }
+                        ]
+                    },
+                    "config": {
+                        "view": {
+                            "stroke": "transparent"
+                        }
                     }
+                }
 
-                    // Is the content a URL (must be https://) or pasted data?
-                    if (geogVal.substring(0, 8) === 'https://') {
-                        vegaLiteSpec.data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
-                        createVisualisation();              // update the visualisation
-                    }
-                    else {
-                        // the data must be in the box directly, either pasted or loaded locally
-                        // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
+                // List of all valid Vega sequential palettes which the user can enter into the 'other' palette input box
+                var vegaLiteSequentialPalettes = {
+                    // single-hue
+                    'blues': true,
+                    'tealblues': true,
+                    'teals': true,
+                    'greens': true,
+                    'browns': true,
+                    'oranges': true,
+                    'reds': true,
+                    'purples': true,
+                    'warmgreys': true,
+                    'greys': true,
+                    // multi-hue
+                    'viridis': true,
+                    'magma': true,
+                    'inferno': true,
+                    'plasma': true,
+                    'bluegreen': true,
+                    'bluepurple': true,
+                    'goldgreen': true,
+                    'goldorange': true,
+                    'goldred': true,
+                    'greenblue': true,
+                    'orangered': true,
+                    'purplebluegreen': true,
+                    'purpleblue': true,
+                    'purplered': true,
+                    'redpurple': true,
+                    'yellowgreenblue': true,
+                    'yellowgreen': true,
+                    'yelloworangebrown': true,
+                    'yelloworangered': true,
+                    'darkblue': true,
+                    'darkgold': true,
+                    'darkgreen': true,
+                    'darkmulti': true,
+                    'darkred': true,
+                    'lightgreyred': true,
+                    'lightgreyteal': true,
+                    'lightmulti': true,
+                    'lightorange': true,
+                    'lighttealblue': true
+                }
 
+
+                // ========= UI operations =========
+                // Performs CSS class add/remove etc. to show/hide content sections
+                function toggleContentSection(name) {
+                    var elementIcon = document.getElementById(name + 'Toggle');
+                    var elementMessage = document.getElementById(name + 'ShowContent');
+                    var elementForm = document.getElementById(name + 'Form');
+
+                    // Font Awesome icon in the legend
+                    elementIcon.classList.toggle('fa-minus');
+                    elementIcon.classList.toggle('fa-plus');
+
+                    elementMessage.classList.toggle('hideContent'); // message to show the full content
+                    elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+                }
+                // =========
+
+
+                // ========= File loading capabilities, either from the local device or remotely =========
+                // Attempt to obtain a local file prior to processing
+                function localFileLoader(src, dest) {
+                    if (src.value !== '') {
                         try {
-                            var data = JSON.parse(geogVal);     // as GeoJSON is valid JSON, attempt to parse it
-                            vegaLiteSpec.data.values = data;
-                            createVisualisation();              // update the visualisation
+                            var reader = new FileReader();
+                   	        reader.onload = function (e) {
+                                destEl = document.getElementById(dest);
+                                destEl.value = e.target.result;
+                                (dest === 'data') ? checkData(destEl) : checkGeography(destEl);
+                   	        };
+                            reader.readAsText(src.files[0]);
+                            src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
                         }
                         catch(e) {
-                            // Create an error message to inform the user that the GeoJSON isn't valid
-                            alertify.alert('Sorry, geography isn\'t valid...', "The geography you are trying to use doesn't seem to be GeoJSON. Please check it and try again.");
+                            // we can't use window.FileReader or something else went wrong so inform the user
+                            alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
                         }
                     }
                 }
-            }
 
-            // Check the input provided for the visualisation title
-            function updateTitle(val) {
-                vegaLiteSpec.title.text = val;       // set the title based on the content provided by the user
-                createVisualisation();               // update the visualisation
-            }
+                // Attempt to obtain a remote file via URL
+                function remoteFileLoader(url) {
+                    labAjax(url, function (data) {
+                        if (data === null || data === '') {
+                            alertify.alert('Sorry, data couldn\'t be loaded...', 'Please check you entered the URL correctly. If so, it may be that the file no longer exists, the URL has changed or the server rejected the request.');
+                            return false;
+                        }
 
-            // Updates the palette scheme name used by the visualisaton
-            function updatePalette(el) {
-                var paletteName = el.value;
-                var paletteList = document.getElementById('paletteList');               // the palette select list
-                var paletteCustom = document.getElementById('paletteCustom');           // the container for the custom text box
-
-                if (paletteName === 'other') {
-                    // we need to make sure that the "other" palette text box is visible
-                    if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
-
-                    // load the value from the text box ready for further testing below - it could be blank or have a previous value entered by the user
-                    paletteName = document.getElementById('palette').value;
+                        processGeoJson(data);
+                    }, { type: 'txt' });    // Don't get labAjax to do the parsing - just return the content as-is and we parse it in the processGeoJson function
                 }
-                else {
-                    // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
-                    if (el === paletteList && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
+                // =========
+
+
+                // ========= Dynamic changes to the Vega-Lite specification based on user choices =========
+                // Check the input provided for the data of the visualisation
+                function checkData(el) {
+                    // Only do something if there is content within the data box
+                    if (el.value !== '' && el.value !== null) {
+                        // Is the content a URL (must be https://) or pasted data?
+                        if (el.value.substring(0, 8) === 'https://') {
+                            vegaLiteSpec.transform[0].from.data = {
+                                "url": el.value
+                            }
+                        }
+                        else {
+                            // the data must be in the box directly, either pasted or loaded locally
+                            // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
+
+                            var data = el.value;
+                            var format;
+
+                            try {
+                                data = JSON.parse(data);    // attempt to parse as JSON
+                                format = 'json';
+                            }
+                            catch(e) {
+                                // assumption now is that the data is CSV
+                                // the following regex lines deal with newline characters to ensure the data is presented correctly as a continous string within the Vega-Lite spec
+                                data = data.replace(/\\n/g, '\n');  // replace actual string occurences of "\n" with newline characters
+                                data = data.replace(/\n/g, '\n');   // replace any carriage returns with newline characters
+                                format = 'csv';
+
+                                el.value = data;    // update the input field with the cleaned output
+                            }
+
+                            // add the data to the Vega-Lite spec
+                            vegaLiteSpec.transform[0].from.data = {
+                                "values": data,
+                                "format": {
+                                    "type": format
+                                }
+                            }
+                        }
+
+                        createVisualisation();          // update the visualisation
+                    }
                 }
 
+                // Handle the UI changes based on the selection in the geography list
+                function checkGeographyChoice(val) {
+                    var customGeogContainer = document.getElementById('geographyCustom');
+                    var geogVal = val;
 
-                if (paletteName !== '' && paletteName !== null && paletteName !== 'other') {
-                    // Ensure that the value given is a valid sequential palette scheme.
-                    // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
-                    // If there is it will return true, otherwise null - saves looping through an array etc.
-                    if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
-                        vegaLiteSpec.encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
-                        createVisualisation();                                          // update the visualisation
+                    if (geogVal === 'other') {
+                        customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
+                        geogVal = document.getElementById('geography').value    // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
+                    }
+                    else if (!customGeogContainer.classList.contains('hideContent')) {
+                        customGeogContainer.classList.add('hideContent');       // add the 'hideContent' class to the custom geography div
+                    }
+
+                    checkGeography(geogVal);
+                }
+
+                // Check the input provided for the geography of the visualisation
+                function checkGeography(val) {
+                    var geogVal = val;
+
+                    if (geogVal !== '' && geogVal !== null && geogVal !== 'other') {
+                        // Set up the common objects of the geography
+                        vegaLiteSpec.data = {
+                            "format": {
+                                "property": "features"
+                            }
+                        }
+
+                        // Is the content a URL (must be https://) or pasted data?
+                        if (geogVal.substring(0, 8) === 'https://') {
+                            vegaLiteSpec.data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
+                            createVisualisation();              // update the visualisation
+                        }
+                        else {
+                            // the data must be in the box directly, either pasted or loaded locally
+                            // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
+
+                            try {
+                                var data = JSON.parse(geogVal);     // as GeoJSON is valid JSON, attempt to parse it
+                                vegaLiteSpec.data.values = data;
+                                createVisualisation();              // update the visualisation
+                            }
+                            catch(e) {
+                                // Create an error message to inform the user that the GeoJSON isn't valid
+                                alertify.alert('Sorry, geography isn\'t valid...', "The geography you are trying to use doesn't seem to be GeoJSON. Please check it and try again.");
+                            }
+                        }
+                    }
+                }
+
+                // Check the input provided for the visualisation title
+                function updateTitle(val) {
+                    vegaLiteSpec.title.text = val;       // set the title based on the content provided by the user
+                    createVisualisation();               // update the visualisation
+                }
+
+                // Updates the palette scheme name used by the visualisation
+                function updatePalette(el) {
+                    var paletteName = el.value;
+                    var paletteList = document.getElementById('paletteList');               // the palette select list
+                    var paletteCustom = document.getElementById('paletteCustom');           // the container for the custom text box
+
+                    if (paletteName === 'other') {
+                        // we need to make sure that the "other" palette text box is visible
+                        if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
+
+                        // load the value from the text box ready for further testing below - it could be blank or have a previous value entered by the user
+                        paletteName = document.getElementById('palette').value;
                     }
                     else {
-                        alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
+                        // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
+                        if (el === paletteList && !paletteCustom.classList.contains('hideContent')) paletteCustom.classList.add('hideContent');
+                    }
+
+
+                    if (paletteName !== '' && paletteName !== null && paletteName !== 'other') {
+                        // Ensure that the value given is a valid sequential palette scheme.
+                        // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
+                        // If there is it will return true, otherwise null - saves looping through an array etc.
+                        if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
+                            vegaLiteSpec.encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
+                            createVisualisation();                                          // update the visualisation
+                        }
+                        else {
+                            alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
+                        }
                     }
                 }
-            }
 
-            // Update the scale method, e.g. linear, quantile, quantize
-            function updateScale(val) {
-                var intervalsContainer = document.getElementById('intervalsContainer');     // the span around the intervals list
-                var intervalsMsg = document.getElementById('intervalsMsg');                 // the span around the wording " and number of intervals"
+                // Update the scale method, e.g. linear, quantile, quantize
+                function updateScale(val) {
+                    var intervalsContainer = document.getElementById('intervalsContainer');     // the span around the intervals list
+                    var intervalsMsg = document.getElementById('intervalsMsg');                 // the span around the wording " and number of intervals"
 
-                // Handle whether the breaks select list should be visible or not
-                if (val === 'linear') {
-                    // Intervals list should be hidden
-                    if (!intervalsContainer.classList.contains('hideContent')) {
-                        intervalsContainer.classList.add('hideContent');
-                        intervalsMsg.classList.add('hideContent');
+                    // Handle whether the breaks select list should be visible or not
+                    if (val === 'linear') {
+                        // Intervals list should be hidden
+                        if (!intervalsContainer.classList.contains('hideContent')) {
+                            intervalsContainer.classList.add('hideContent');
+                            intervalsMsg.classList.add('hideContent');
+                        }
+                        vegaLiteSpec.encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
                     }
-                    vegaLiteSpec.encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
-                }
-                else {
-                    // Intervals list should be visible
-                    if (intervalsContainer.classList.contains('hideContent')) {
-                        intervalsContainer.classList.remove('hideContent');
-                        intervalsMsg.classList.remove('hideContent');
+                    else {
+                        // Intervals list should be visible
+                        if (intervalsContainer.classList.contains('hideContent')) {
+                            intervalsContainer.classList.remove('hideContent');
+                            intervalsMsg.classList.remove('hideContent');
+                        }
+                        vegaLiteSpec.encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
                     }
-                    vegaLiteSpec.encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
+
+                    vegaLiteSpec.encoding.color.scale.type = val;   // set the interval type in the spec
+                    createVisualisation();
                 }
 
-                vegaLiteSpec.encoding.color.scale.type = val;   // set the interval type in the spec
-                createVisualisation();
-            }
-
-            // Update the number of breaks to use
-            function updateIntervals(val) {
-                vegaLiteSpec.encoding.color.scale.scheme.count = val;
-                createVisualisation();
-            }
-            // =========
+                // Update the number of breaks to use
+                function updateIntervals(val) {
+                    vegaLiteSpec.encoding.color.scale.scheme.count = val;
+                    createVisualisation();
+                }
+                // =========
 
 
-            // Embed the visualisation within the page
-            function createVisualisation() {
-                var vizContainer = document.getElementById('vegaLiteViz');  // the DIV where the visualisation is created
+                // Embed the visualisation within the page
+                function createVisualisation() {
+                    // Clear any previous visualisation
+                    vizContainer.innerHTML = '';
 
-                // Clear any previous visualisation
-                vizContainer.innerHTML = '';
+                    // Embed the Vega-lite visualisation
+                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(console.warn);
 
-                // Embed the Vega-lite visualisation
-                vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true, renderer: 'svg'}).catch(console.warn);
-
-                if (vizContainer.innerHTML === '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
+                    if (vizContainer.innerHTML === '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
+                }
             }
         </script>
     </body>
