@@ -467,6 +467,14 @@
                 }
 
 
+                // Custom console.warn function to handle issues raised from the vegaEmbed catch clause
+                console.warnDefault = console.warn;
+                console.warn = function (args) {
+                    vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
+                    return console.warnDefault(args);
+                }
+
+
                 // ========= UI operations =========
                 // Performs CSS class add/remove etc. to show/hide content sections
                 function toggleContentSection(name) {
@@ -695,8 +703,6 @@
 
                     // Embed the Vega-lite visualisation
                     vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(console.warn);
-
-                    if (vizContainer.innerHTML === '') vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
                 }
             }
         </script>
