@@ -148,7 +148,7 @@
                 }
             }
 
-            /* Alertify theme overidden styles */
+            /* Alertify theme overridden styles */
             .alertify .ajs-header
             {
                 color: #757575;
@@ -162,6 +162,15 @@
             .alertify button:focus, .alertify input:focus
             {
                 outline: 2px solid rgba(252, 103, 33, 0.2);
+            }
+
+            /* Font-Awesome overridden styles */
+            .fa-exclamation-triangle
+            {
+                font-size: 300px;
+                color: #ccc;
+                display: block;
+                text-align: center;
             }
         </style>
     </head>
@@ -467,11 +476,24 @@
                 }
 
 
-                // Custom console.warn function to handle issues raised from the vegaEmbed catch clause
-                console.warnDefault = console.warn;
+                // ========= Console warn/error overrides to handle issues raised from the vegaEmbed catch clause =========
+                console.warnDefault = console.warn;     // Cache the default action for warn...
+                console.errorDefault = console.error;   // ...and error
+
+                function errMsg() {
+                    vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p><p><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></p>';
+                }
+
+                // overridden warn
                 console.warn = function (args) {
-                    vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p>';
+                    errMsg();
                     return console.warnDefault(args);
+                }
+
+                // overridden error
+                console.error = function (args) {
+                    errMsg();
+                    return console.errorDefault(args);
                 }
 
 
@@ -702,7 +724,10 @@
                     vizContainer.innerHTML = '';
 
                     // Embed the Vega-lite visualisation
-                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(console.warn);
+                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(function () {
+                        console.warn;
+                        console.error
+                    });
                 }
             }
         </script>
