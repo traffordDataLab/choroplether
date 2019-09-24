@@ -105,6 +105,25 @@
                 width: 50%
             }
 
+            #updateButton
+            {
+                cursor: pointer;
+                margin-left: 10px;
+            }
+
+            /* This span also has the class labButton applied to it */
+            #updateIconContainer
+            {
+                padding: 6px 6px 4px 6px;
+                border-radius: 20px;
+            }
+
+            /* This span also has the fa fa-redo-alt classes applied to it */
+            #updateIcon
+            {
+                font-size: 20px;
+            }
+
             @media (max-width:1080px)
             {
                 #layoutContainer
@@ -302,6 +321,12 @@
                                 </p>
                             </div>
                         </fieldset>
+
+                        <span id="updateButton" onclick="createVisualisation()" title="Update the visualisation">
+                            <span id="updateIconContainer" class="labButton">
+                                <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true" onclick="createVisualisation()"></span>
+                            </span> UPDATE
+                        </span>
                     </div>
                     <div id="vegaLiteViz"></div>
                 </div>
@@ -352,6 +377,7 @@
             */
             var layoutContainer = document.getElementById('layoutContainer');   // the UI interface container
             var vizContainer = document.getElementById('vegaLiteViz');          // the DIV where the visualisation is created
+            var updateIcon = document.getElementById('updateIcon');             // the span containing the font awesome icon for updating the visualisation
 
             // Test that we're not in IE11 or worse
             if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > -1) {
@@ -476,25 +502,19 @@
                 }
 
 
-                // ========= Console warn/error overrides to handle issues raised from the vegaEmbed catch clause =========
-                console.warnDefault = console.warn;     // Cache the default action for warn...
-                console.errorDefault = console.error;   // ...and error
+                // ========= Console warn override to handle issues raised from the vegaEmbed catch clause =========
+                console.warnDefault = console.warn;     // Cache the default action for warn
 
-                function errMsg() {
+                function displayErrorMessage() {
                     vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p><p><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></p>';
                 }
 
                 // overridden warn
                 console.warn = function (args) {
-                    errMsg();
+                    displayErrorMessage();
                     return console.warnDefault(args);
                 }
-
-                // overridden error
-                console.error = function (args) {
-                    errMsg();
-                    return console.errorDefault(args);
-                }
+                // =========
 
 
                 // ========= UI operations =========
@@ -510,6 +530,20 @@
 
                     elementMessage.classList.toggle('hideContent'); // message to show the full content
                     elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+                }
+
+                // Convey to the user that something is loading by spinning the update button icon
+                function updateButtonSpin() {
+                    updateIcon.classList.remove('fa-redo-alt');
+                    updateIcon.classList.add('fa-spinner');
+                    updateIcon.classList.add('fa-spin');
+                }
+
+                // Reset the update button back to its normal state after an update has been performed
+                function updateButtonReset() {
+                    updateIcon.classList.remove('fa-spin');
+                    updateIcon.classList.remove('fa-spinner');
+                    updateIcon.classList.add('fa-redo-alt');
                 }
                 // =========
 
@@ -552,7 +586,7 @@
                 // ========= Dynamic changes to the Vega-Lite specification based on user choices =========
                 // Check the input provided for the data of the visualisation
                 function checkData(el) {
-                    // Only do something if there is content within the data box
+                    // Only attempt parsing if there is content within the data box
                     if (el.value !== '' && el.value !== null) {
                         // Is the content a URL (must be https://) or pasted data?
                         if (el.value.substring(0, 8) === 'https://') {
@@ -589,9 +623,12 @@
                                 }
                             }
                         }
-
-                        createVisualisation();          // update the visualisation
                     }
+                    else {
+                        vegaLiteSpec.transform[0].from.data = {};   // the data box is empty so set the spec accordingly
+                    }
+
+                    createVisualisation();  // update the visualisation
                 }
 
                 // Handle the UI changes based on the selection in the geography list
@@ -720,13 +757,15 @@
 
                 // Embed the visualisation within the page
                 function createVisualisation() {
-                    // Clear any previous visualisation
-                    vizContainer.innerHTML = '';
+                    updateButtonSpin();
 
-                    // Embed the Vega-lite visualisation
-                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).catch(function () {
-                        console.warn;
-                        console.error
+                    vizContainer.innerHTML = '';    // clear any previous visualisation
+
+                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).then(function(result) {
+                        updateButtonReset();
+                    }).catch(function (error) {
+                        displayErrorMessage();
+                        updateButtonReset();
                     });
                 }
             }
