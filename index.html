@@ -57,6 +57,8 @@
             label
             {
                 padding-right: 10px;
+                font-size: 0.9em;
+                font-weight: bold;
             }
 
             legend .fa
@@ -72,6 +74,17 @@
             .showContentMsg
             {
                 color: #757575;
+            }
+
+            .longInputBox
+            {
+                width: 50%;
+            }
+
+            .longInputBoxLabel
+            {
+                display: inline-block;
+                width: 7em;
             }
 
             #toolsPanel
@@ -92,11 +105,6 @@
             #vegaLiteViz
             {
                 float: right;
-            }
-
-            #vizTitle, #palette
-            {
-                width: 50%
             }
 
             #updateButton
@@ -265,9 +273,13 @@
                             <div id="designForm" class="hideContent">
                                 Customise the output of the visualisation.
                                 <br /><br />
-                                <label for="vizTitle">Title:</label><input type="text" id="vizTitle" name="vizTitle" placeholder="Optional title for visualisation" onchange="updateTitle(this.value)"/>
+                                <label for="vizTitle" class="longInputBoxLabel">Chart title:</label><input type="text" id="vizTitle" name="vizTitle" class="longInputBox" placeholder="Optional: title for visualisation" onchange="updateTitle(this.value)"/>
+                                <br />
+                                <label for="vizLegendTitle" class="longInputBoxLabel">Legend title:</label><input type="text" id="vizLegendTitle" name="vizLegendTitle" class="longInputBox" placeholder="Optional: title for legend" onchange="updateLegendTitle(this.value)"/>
+                                <!--br />
+                                <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="" onchange="updateAttribution(this.value)"/-->
                                 <br /><br />
-                                Choose a palette scheme from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                                Choose a palette from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; to enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme name</a>.
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
                                     <optgroup label="Sequential Single-Hue">
@@ -291,7 +303,7 @@
 
                                 <div id="paletteCustom" class="hideContent">
                                     <br />
-                                    <label for="palette">Enter a sequential <a href="https://vega.github.io/vega/docs/schemes/#reference" target="_blank">Vega palette scheme</a>:</label><input type="text" id="palette" name="palette" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                    <label for="palette" class="longInputBoxLabel">Palette name:</label><input type="text" id="palette" name="palette" class="longInputBox" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
                                     <br />
                                 </div>
                                 <p>
@@ -389,7 +401,8 @@
                     "title": {
                         "text": "",
                         "font": "Roboto",
-                        "color": "#757575"
+                        "color": "#757575",
+                        "fontSize": 18
                     },
                     "data": {
                         "url": document.getElementById("geographyList").value,
@@ -427,6 +440,8 @@
                             "type": "quantitative",
                             "legend": {
                                 "title": null,
+                                "titleFont": "Roboto",
+                                "titleColor": "#757575",
                                 "direction": "horizontal",
                                 "orient": "bottom"
                             }
@@ -680,6 +695,12 @@
                 function updateTitle(val) {
                     vegaLiteSpec.title.text = val;       // set the title based on the content provided by the user
                     createVisualisation();               // update the visualisation
+                }
+
+                // Check the input provided for the legend title
+                function updateLegendTitle(val) {
+                    vegaLiteSpec.encoding.color.legend.title = val; // set the legend title based on the content provided by the user
+                    createVisualisation();                          // update the visualisation
                 }
 
                 // Updates the palette scheme name used by the visualisation
