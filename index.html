@@ -276,6 +276,8 @@
                                 <label for="vizTitle" class="longInputBoxLabel">Chart title:</label><input type="text" id="vizTitle" name="vizTitle" class="longInputBox" placeholder="Optional: title for visualisation" onchange="updateTitle(this.value)"/>
                                 <br />
                                 <label for="vizLegendTitle" class="longInputBoxLabel">Legend title:</label><input type="text" id="vizLegendTitle" name="vizLegendTitle" class="longInputBox" placeholder="Optional: title for legend" onchange="updateLegendTitle(this.value)"/>
+                                <br />
+                                <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
                                 Choose a palette from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; to enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme name</a>.
                                 <br />
@@ -380,15 +382,20 @@
                                 Trafford Data Lab:
 
             */
-            var layoutContainer = document.getElementById('layoutContainer');   // the UI interface container
-            var vizContainer = document.getElementById('vegaLiteViz');          // the DIV where the visualisation is created
-            var updateIcon = document.getElementById('updateIcon');             // the span containing the font awesome icon for updating the visualisation
 
             // Test that we're not in IE11 or worse
             if (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > -1) {
-                layoutContainer.innerHTML = '<h2>Unfortunately you need a modern browser to create Vega-Lite visualisations. Please upgrade or use this app in another browser.</h2>';
+                // Insert a message into the UI interface container
+                document.getElementById('layoutContainer').innerHTML = '<h2>Unfortunately you need a modern browser to create Vega-Lite visualisations. Please upgrade or use this app in another browser.</h2>';
             }
             else {
+                // Reference commonly used objects
+                var vizContainer = document.getElementById('vegaLiteViz');          // the DIV where the visualisation is created
+                var updateIcon = document.getElementById('updateIcon');             // the span containing the font awesome icon for updating the visualisation
+
+                // Insert the default attribution into the input box based on the current year
+                document.getElementById('vizAttribution').value = 'Contains National Statistics & OS data © Crown copyright and database right ' + new Date().getFullYear();
+
                 // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
                 var vegaLiteSpec = {
                     "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
@@ -402,61 +409,87 @@
                         "color": "#757575",
                         "fontSize": 18
                     },
-                    "data": {
-                        "url": document.getElementById("geographyList").value,
-                        "format": {
-                            "property": "features"
-                        }
-                    },
-                    "transform": [
+                    "layer": [
                         {
-                            "lookup": "properties.area_code",
-                            "from": {
-                                "key": "area_code",
-                                "fields": ["value"]
+                            "data": {
+                                "url": document.getElementById("geographyList").value,
+                                "format": {
+                                    "property": "features"
+                                }
+                            },
+                            "transform": [
+                                {
+                                    "lookup": "properties.area_code",
+                                    "from": {
+                                        "key": "area_code",
+                                        "fields": ["value"]
+                                    }
+                                }
+                            ],
+                            "mark": {
+                                "type": "geoshape",
+                                "stroke": "white",
+                                "strokeWidth": 1
+                            },
+                            "projection": {
+                                "type": "mercator"
+                            },
+                            "encoding": {
+                                "color": {
+                                    "field": "value",
+                                    "scale": {
+                                        "scheme": {
+                                            "name": document.getElementById("paletteList").value,
+                                            "count": ""
+                                        },
+                                        "type": document.getElementById("scaleList").value
+                                    },
+                                    "type": "quantitative",
+                                    "legend": {
+                                        "title": "",
+                                        "titleFont": "Roboto",
+                                        "titleColor": "#757575",
+                                        "direction": "horizontal",
+                                        "orient": "bottom",
+                                        "padding": 9
+                                    }
+                                },
+                                "tooltip": [
+                                    {
+                                        "field": "properties.area_name",
+                                        "type": "nominal",
+                                        "title": "Area"
+                                    },
+                                    {
+                                        "field": "value",
+                                        "type": "quantitative",
+                                        "title": "Value"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "data": {
+                                "values": [
+                                    {
+                                        "note": document.getElementById('vizAttribution').value
+                                    }
+                                ]
+                            },
+                            "mark": {
+                                "type": "text",
+                                "align": "left",
+                                "baseline": "bottom",
+                                "dx": -40,
+                                "dy": 283,
+                                "fontSize": 8,
+                                "tooltip": null
+                            },
+                            "encoding": {
+                                "text": {"field": "note", "type": "nominal"}
                             }
                         }
                     ],
-                    "mark": {
-                        "type": "geoshape",
-                        "stroke": "white",
-                        "strokeWidth": 1
-                    },
-                    "projection": {
-                        "type": "mercator"
-                    },
-                    "encoding": {
-                        "color": {
-                            "field": "value",
-                            "scale": {
-                                "scheme": {
-                                    "name": document.getElementById("paletteList").value,
-                                    "count": ""
-                                },
-                                "type": document.getElementById("scaleList").value
-                            },
-                            "type": "quantitative",
-                            "legend": {
-                                "title": null,
-                                "titleFont": "Roboto",
-                                "titleColor": "#757575",
-                                "direction": "horizontal",
-                                "orient": "bottom"
-                            }
-                        },
-                        "tooltip": [
-                            {
-                                "field": "properties.area_name",
-                                "type": "nominal",
-                                "title": "Area"
-                            },
-                            {
-                                "field": "value",
-                                "type": "quantitative",
-                                "title": "Value"
-                            }
-                        ]
-                    },
                     "config": {
                         "view": {
                             "stroke": "transparent"
@@ -598,7 +631,7 @@
                     if (el.value !== '' && el.value !== null) {
                         // Is the content a URL (must be https://) or pasted data?
                         if (el.value.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.transform[0].from.data = {
+                            vegaLiteSpec.layer[0].transform[0].from.data = {
                                 "url": el.value
                             }
                         }
@@ -624,7 +657,7 @@
                             }
 
                             // add the data to the Vega-Lite spec
-                            vegaLiteSpec.transform[0].from.data = {
+                            vegaLiteSpec.layer[0].transform[0].from.data = {
                                 "values": data,
                                 "format": {
                                     "type": format
@@ -633,7 +666,7 @@
                         }
                     }
                     else {
-                        vegaLiteSpec.transform[0].from.data = {};   // the data box is empty so set the spec accordingly
+                        vegaLiteSpec.layer[0].transform[0].from.data = {};   // the data box is empty so set the spec accordingly
                     }
 
                     createVisualisation();  // update the visualisation
@@ -661,7 +694,7 @@
 
                     if (geogVal !== '' && geogVal !== null && geogVal !== 'other') {
                         // Set up the common objects of the geography
-                        vegaLiteSpec.data = {
+                        vegaLiteSpec.layer[0].data = {
                             "format": {
                                 "property": "features"
                             }
@@ -669,7 +702,7 @@
 
                         // Is the content a URL (must be https://) or pasted data?
                         if (geogVal.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
+                            vegaLiteSpec.layer[0].data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
                             createVisualisation();              // update the visualisation
                         }
                         else {
@@ -678,7 +711,7 @@
 
                             try {
                                 var data = JSON.parse(geogVal);     // as GeoJSON is valid JSON, attempt to parse it
-                                vegaLiteSpec.data.values = data;
+                                vegaLiteSpec.layer[0].data.values = data;
                                 createVisualisation();              // update the visualisation
                             }
                             catch(e) {
@@ -692,13 +725,38 @@
                 // Check the input provided for the visualisation title
                 function updateTitle(val) {
                     vegaLiteSpec.title.text = val;       // set the title based on the content provided by the user
+                    adjustAttributionPosition();         // ensure the vertical position of the attribution is correct
+
                     createVisualisation();               // update the visualisation
                 }
 
                 // Check the input provided for the legend title
                 function updateLegendTitle(val) {
-                    vegaLiteSpec.encoding.color.legend.title = val; // set the legend title based on the content provided by the user
-                    createVisualisation();                          // update the visualisation
+                    vegaLiteSpec.layer[0].encoding.color.legend.title = val;    // set the legend title based on the content provided by the user
+                    adjustAttributionPosition();                                // ensure the vertical position of the attribution is correct
+
+                    createVisualisation();                                      // update the visualisation
+                }
+
+                // Check the input provided for the legend title
+                function updateAttribution(val) {
+                    vegaLiteSpec.layer[1].data.values[0].note = val;    // set the attribution based on the content provided by the user
+                    adjustAttributionPosition();                        // ensure the vertical position of the attribution is correct
+
+                    createVisualisation();                              // update the visualisation
+                }
+
+                // Make adjustments to the attribution's vertical offset depending on whether there are chart and/or legend titles
+                function adjustAttributionPosition() {
+                    if (vegaLiteSpec.title.text !== '' && vegaLiteSpec.layer[0].encoding.color.legend.title === '') {
+                        vegaLiteSpec.layer[1].mark.dy = 273;
+                    }
+                    else if (vegaLiteSpec.title.text === '' && vegaLiteSpec.layer[0].encoding.color.legend.title !== '') {
+                        vegaLiteSpec.layer[1].mark.dy = 293;
+                    }
+                    else {
+                        vegaLiteSpec.layer[1].mark.dy = 283;
+                    }
                 }
 
                 // Updates the palette scheme name used by the visualisation
@@ -725,7 +783,7 @@
                         // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
                         // If there is it will return true, otherwise null - saves looping through an array etc.
                         if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
-                            vegaLiteSpec.encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
+                            vegaLiteSpec.layer[0].encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
                             createVisualisation();                                          // update the visualisation
                         }
                         else {
@@ -746,7 +804,7 @@
                             intervalsContainer.classList.add('hideContent');
                             intervalsMsg.classList.add('hideContent');
                         }
-                        vegaLiteSpec.encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
+                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
                     }
                     else {
                         // Intervals list should be visible
@@ -754,16 +812,16 @@
                             intervalsContainer.classList.remove('hideContent');
                             intervalsMsg.classList.remove('hideContent');
                         }
-                        vegaLiteSpec.encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
+                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
                     }
 
-                    vegaLiteSpec.encoding.color.scale.type = val;   // set the interval type in the spec
+                    vegaLiteSpec.layer[0].encoding.color.scale.type = val;   // set the interval type in the spec
                     createVisualisation();
                 }
 
                 // Update the number of breaks to use
                 function updateIntervals(val) {
-                    vegaLiteSpec.encoding.color.scale.scheme.count = val;
+                    vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = val;
                     createVisualisation();
                 }
                 // =========
