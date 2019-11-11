@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+    <head>
+    <title>Trafford Data Lab: Choroplether documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+    <meta charset="UTF-8"/>
+    <meta name="keywords" content="trafford, vega-lite, choropleth, choropleths, map, documentation"/>
+    <meta name="description" content="Choroplether documentation. Trafford Data Lab web application allowing the quick creation of choropleth map visualisations based on Vega-Lite."/>
+
+    <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labBase.css"/>
+    <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labWebsite.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+        <style>
+            .bold
+            {
+                font-weight: bold;
+            }
+
+            .italic
+            {
+                font-style: italic;
+            }
+
+            .screenshot
+            {
+                box-shadow: 3px 3px 5px #757575;
+            }
+
+            .code
+            {
+                display: block;
+                background-color: #ccc;
+                padding: 10px;
+            }
+
+            #headerTitle
+            {
+                display: inline-block;
+                padding-top: 19px;
+                font-size: 20px;
+                color: #757575;
+            }
+
+            /* Overridden styles from labWebsite.css */
+            .traffordDataLabLogo
+            {
+                float: left;
+                padding-bottom: 9px;
+            }
+
+            @media (max-width:620px)
+            {
+                .main
+                {
+                    margin-top: 70px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <a href="https://www.trafforddatalab.io/index.html" target="_blank"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
+                <span id="headerTitle">Choroplether</span>
+            </div>
+
+            <div class="main">
+                <div class="doubleColumnTxtImg">
+                    <div>
+                        <h1>Choroplether documentation</h1>
+                        <ul>
+                            <li><a href="#intro">Introduction</a></li>
+                            <li><a href="#data">Data</a></li>
+                            <li><a href="#geography">Geography</a></li>
+                            <li><a href="#design">Design</a></li>
+                            <li><a href="#exportedit">Exporting and further editing</a></li>
+                            <li><a href="#credits">Credits</a></li>
+                        </ul>
+
+                        <a name="intro"></a><h2>Introduction</h2>
+                        <p>
+                            <a href="index.html">Choroplether</a> is a web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>, without having to create all the code yourself. The resulting output can be saved as an <abbr title="Scalable Vector Graphics">SVG</abbr> or <abbr title="Portable Network Graphics">PNG</abbr> image or opened within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> for further customisation. You can also <a href="https://github.com/vega/vega-embed" target="_blank">embed it in a webpage</a> if you require an interactive visualisation.
+                        </p>
+                    </div>
+                    <div>
+                        <img src="docs_images/example.png" alt="Example" class="screenshot" style="margin-top: 25px;"/>
+                    </div>
+                </div>
+
+                <p>
+                    You supply some suitably formatted data, select or provide a spatial geography that matches the data and then customise the appearance. The interface is split into 3 sections: <strong>Data</strong>, <strong>Geography</strong> and <strong>Design</strong>, each can be collapsed and expanded as required by selecting the relevant orange losenge. The app automatically attempts to update the visualisation as you make changes in any of the sections, or when you select the <strong>UPDATE</strong> button.
+                </p>
+                <br />
+
+                <a name="data"></a><h2>Data</h2>
+                <p>
+                    This is where you specify the dataset that will be visualised, either by choosing a local file from your device, providing the <abbr title="Uniform Resource Locator">URL</abbr> of an externally hosted file or pasting the data directly into the box. The data can be in either <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values"><strong>CSV</strong></abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation"><strong>JSON</strong></abbr></a> format and the links provide you with example files for both to help ensure you get your data prepared correctly. Once you have entered some data the app will attempt to visualise it. If your data relates to Trafford's Electoral Wards it should produce a visualisation straightaway, otherwise the following notification will be displayed:
+                </p>
+                <p>
+                    <img src="docs_images/warning.png" width="200" alt="Warning message" class="screenshot" style="float: left; margin-right: 20px;"/>
+                    This means either that the data you have provided doesn't match the currently selected geography (see next section for more on this) or there is an error in your data. The most important aspect is that <span style="font-style: italic;">both the data and the geography must contain the field <strong>area_code</strong></span> as this is the joining variable used to match the data to the spatial geography.
+                </p>
+                <br class="noFloat"/>
+                <br />
+
+                <a name="geography"></a><h3>Geography</h3>
+                <p>
+                    The geography is a spatial data file which describes the shapes associated with the data (e.g. the Electoral Wards within a Local Authority) as polygons using latitude and longitude coordinates. The list is pre-populated with different geographic boundaries within Trafford and Greater Manchester. If your data is related to a different geographic location or type of geography you can provide it in a similar way to the data, i.e. a local file from your device, providing the <abbr title="Uniform Resource Locator">URL</abbr> of an externally hosted file or pasting the data directly into the box, once you have selected the <strong>Other (custom)...</strong> option. The geography must be valid <a href="https://geojson.org" target="_blank"><abbr title="Geographic JavaScript Object Notation">GeoJSON</strong></abbr></a>, an open-source spatial format, and it must contain the key <strong>area_code</strong> to identify the features. The following example from a spatial file describing Trafford's Electoral Wards should hopefully demonstrate this:
+                </p>
+                <code class="code">
+                    <pre>
+    {
+        "type": "FeatureCollection",
+        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {
+                    "area_code": "E05000819",
+                    "area_name": "Altrincham"
+                },
+                "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": [...
+                    </pre>
+                </code>
+                <p>In the example above, the ward of Altrincham has an <strong>area_code</strong> ID of E05000819. In the example data files this <strong>area_code</strong> has the value <strong>1</strong>. The value <strong>1</strong> is assigned to a colour based on the range of values within the dataset and the type of <span style="font-style: italic;">scale</span> you want to use (see the <a href="#design">Design</a> section). The result is the shape of Altrincham ward will be displayed, filled with the assigned colour.</p>
+                <br class="noFloat"/>
+
+                <a name="design"></a><h3>Design</h3>
+                <p>
+                    <img src="docs_images/design.png" width="300" alt="Design section" class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
+                    The final section is where you specify how your finished visualisation will look, allowing you to add titles, attribution, select the palette and also choose the scale used to assign the palette to the data. The palette options provided in the select list are a subset of the Vega <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme names</a>. You can use any palette listed via the link within Vega-Lite, but Choroplether will only allow sequential palettes (single-hue and multi-hue) to be used. This is because sequential palettes are the most appropriate types to use for a choropleth map displaying the difference in a singular observation (e.g. income deprivation) rather than categoric data. If the palette you want is not listed, you can choose <strong>Other (custom)...</strong> and type in the scheme name into the box provided. If you require a non-sequential palette you can edit the visualisation within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> (see the <a href="#exportedit">Exporting and further editing</a> section for more information).
+                </p>
+                <p>
+                    The scale determines how the colours are assigned to the map based on the data being displayed.  There are 3 options: <strong>Linear</strong>, <strong>Quantile</strong> and <strong>Equal intervals</strong>. An additional <span style="font-style: italic;">Intervals</span> selection appears except when the <strong>Linear</strong> option is chosen.
+                </p>
+                <ul>
+                    <li><strong>Linear</strong>: Assigns a unique colour from the palette to each unique value in the dataset range</li>
+                    <li><strong>Quantile</strong>: Splits the dataset range into the number of intervals specified in the <span style="font-style: italic;">intervals</span> select list, assigning an <span style="text-decoration: underline;">equal number of observations</span> to each interval. The range of values within each interval can be different.</li>
+                    <li><strong>Equal intervals</strong>: Splits the dataset range into the number of intervals specified in the <span style="font-style: italic;">intervals</span> select list, assigning an <span style="text-decoration: underline;">equal range of values</span> within each interval. The number of observations within each interval can be different.</li>
+                </ul>
+                <p>
+                    The choice of scale depends on your data and what you are trying to show with the visualisation. The number of intervals available are between 4 and 7 inclusive. If you require a different number you will need to use the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a>.
+                </p>
+                <br class="noFloat"/>
+
+                <a name="exportedit"></a><h3>Exporting and further editing</h3>
+                <p>
+                    <img src="docs_images/export.png" width="150" alt="Export" class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
+                    Hovering over your visualisation will highlight a circle icon containing 3 dots in the top-right corner. Selecting this icon provides the export options available to you.
+                </p>
+                <p>
+                    If you are happy with your visualisation and simply need a static graphic to include in a report or presentation you can choose either the <strong>Save as <abbr title="Scalable Vector Graphics">SVG</abbr></strong> or <strong>Save as <abbr title="Portable Network Graphics">PNG</abbr></strong> options to create an image file in the relevant format.
+                </p>
+                <p>
+                    To embed the interactive visualisation within a webpage you will need to choose <strong>View Source</strong> which provides the <a href="https://vega.github.io/vega-lite/docs/spec.html" target="_blank">Vega-Lite specification</a> (code) of your visualisation. You will then need to use the <a href="https://github.com/vega/vega-embed" target="_blank">Vega-Embed</a> tool (as Choroplether does) along with your specification. (The <strong>View Compiled Vega</strong> option is only relevant if you need to use features from the full <a href="https://vega.github.io/vega/" target="_blank">Vega</a> specification as opposed to <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>.)
+                </p>
+                <p>
+                    Finally, <strong>Open in Vega Editor</strong> allows you to tweak and customise your visualisation further by editing the code in the online editor. To use this effectively you will need to read the <a href="https://vega.github.io/vega-lite/docs/" target="_blank">Vega-Lite documentation</a> and understand the <a href="https://vega.github.io/vega-lite/docs/spec.html" target="_blank">Vega-Lite specification</a>.
+                </p>
+                <br class="noFloat"/>
+
+                <a name="credits"></a><h3>Credits</h3>
+                <p>
+                    Choroplether was created using the following:
+                </p>
+                <ul>
+                    <li><a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> - (C) University of Washington Interactive Data Lab (<a href="https://github.com/vega/vega-lite/blob/master/LICENSE" target="_blank">LICENCE</a>)</li>
+                    <li><a href="https://github.com/vega/vega-embed" target="_blank">Vega-Embed</a> - (C) University of Washington Interactive Data Lab (<a href="https://github.com/vega/vega-embed/blob/master/LICENSE" target="_blank">LICENCE</a>)</li>
+                    <li><a href="http://alertifyjs.com" target="_blank">Alertify.js</a> - (C) Mohammad Younes (<a href="https://opensource.org/licenses/gpl-3.0" target="_blank">LICENCE</a>)</li>
+                    <li><a href="https://fontawesome.com" target="_blank">Fontawesome</a> - (C) Fonticons, Inc. All rights reserved (<a href="https://fontawesome.com/license" target="_blank">LICENCE</a>)</li>
+                    <li>All other code by <a href="https://www.trafforddatalab.io" target="_blank">Trafford Data Lab</a> (<a href="https://github.com/traffordDataLab/choroplether/blob/master/LICENSE" target="_blank">LICENCE</a>)</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                <div class="leftFooter">
+                    <div class="logoMedia">
+                        <span class="hideContent">Visit us on </span>
+                        <a class="linkMedia" href="https://twitter.com/traffordDataLab" target="_blank"><span class="fab fa-twitter-square"></span><span class="hideContent">Twitter</span></a>
+                        <span class="hideContent">, </span>
+                        <a class="linkMedia" href="https://github.com/traffordDataLab" target="_blank"><span class="fab fa-github"></span><span class="hideContent">Github</span></a>
+                        <span class="hideContent"> and </span>
+                        <a class="linkMedia" href="https://medium.com/@traffordDataLab" target="_blank"><span class="fab fa-medium"></span><span class="hideContent">Medium<br /></span></a>
+                    </div>
+                    <div class="license">Code <a class="footerLink" href="https://www.trafforddatalab.io/LICENSE.txt" target="_blank">licensed</a> under MIT, data under OGL</div>
+                </div>
+                <div class="rightFooter">
+                    <a href="https://www.trafford.gov.uk" target="_blank"><img class="logoTrafford" src="https://www.trafforddatalab.io/images/trafford_council_logo_black_on_white_100px.png" alt="Trafford Council" border="0"/></a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

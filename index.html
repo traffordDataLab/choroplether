@@ -204,7 +204,7 @@
             </div>
 
             <div class="main">
-                <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="tutorial.html">tutorial</a> for more information and a demonstration of how to use the application.</p>
+                <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="documentation.html">documentation</a> for more information and a demonstration of how to use the application.</p>
 
                 <div id="layoutContainer">
                     <div id="toolsPanel">
@@ -440,7 +440,7 @@
                                     "scale": {
                                         "scheme": {
                                             "name": document.getElementById("paletteList").value,
-                                            "count": ""
+                                            "count": 0
                                         },
                                         "type": document.getElementById("scaleList").value
                                     },
@@ -804,7 +804,7 @@
                             intervalsContainer.classList.add('hideContent');
                             intervalsMsg.classList.add('hideContent');
                         }
-                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = "";    // we don't want a number of breaks as the interval is linear
+                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = 0;            // we don't want a number of breaks as the interval is linear
                     }
                     else {
                         // Intervals list should be visible
@@ -812,7 +812,7 @@
                             intervalsContainer.classList.remove('hideContent');
                             intervalsMsg.classList.remove('hideContent');
                         }
-                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = document.getElementById('intervalsList').value;
+                        vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = parseInt(document.getElementById('intervalsList').value);
                     }
 
                     vegaLiteSpec.layer[0].encoding.color.scale.type = val;   // set the interval type in the spec
@@ -821,7 +821,7 @@
 
                 // Update the number of breaks to use
                 function updateIntervals(val) {
-                    vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = val;
+                    vegaLiteSpec.layer[0].encoding.color.scale.scheme.count = parseInt(val);
                     createVisualisation();
                 }
                 // =========
