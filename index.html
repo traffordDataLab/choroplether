@@ -204,7 +204,7 @@
             </div>
 
             <div class="main">
-                <p>Web application allowing the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. Please read the <a href="documentation.html">documentation</a> for more information and a demonstration of how to use the application.</p>
+                <p>Allows the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth map</a> visualisations based on <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>. A demonstration showing the ONS 2017 mid-year population estimates for Trafford's wards has been automatically generated. Please read the <a href="documentation.html">documentation</a> for more information on how to use the application.</p>
 
                 <div id="layoutContainer">
                     <div id="toolsPanel">
@@ -364,6 +364,8 @@
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
         <!-- Alertify - Nice feedback mechanism to the user for errors and issues -->
         <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
+        <!-- Our external file loader -->
+        <script src="https://www.trafforddatalab.io/assets/javascript/labAjax.js"></script>
 
         <script>
             /*
@@ -840,6 +842,13 @@
                         updateButtonReset();
                     });
                 }
+
+                // On page load, pre-complete the data textbox with the example file and produce an initial visualisation as a demonstration
+                labAjax('data_example.csv', function (data) {
+                    dataTextBox = document.getElementById('data');  // refer to the data textarea
+                    dataTextBox.value = data;                       // put in the example
+                    checkData(dataTextBox);                         // parse it as required by Vega-Lite
+                }, { type: 'txt' });
             }
         </script>
     </body>

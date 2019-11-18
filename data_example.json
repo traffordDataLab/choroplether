@@ -1,23 +1,191 @@
 [
-  {"area_name": "Altrincham", "area_code": "E05000819", "value": 1},
-  {"area_name": "Ashton upon Mersey", "area_code": "E05000820", "value": 2},
-  {"area_name": "Bowdon", "area_code": "E05000821", "value": 3},
-  {"area_name": "Broadheath", "area_code": "E05000822", "value": 4},
-  {"area_name": "Brooklands", "area_code": "E05000823", "value": 5},
-  {"area_name": "Bucklow-St Martins", "area_code": "E05000824", "value": 6},
-  {"area_name": "Clifford", "area_code": "E05000825", "value": 7},
-  {"area_name": "Davyhulme East", "area_code": "E05000826", "value": 8},
-  {"area_name": "Davyhulme West", "area_code": "E05000827", "value": 9},
-  {"area_name": "Flixton", "area_code": "E05000828", "value": 10},
-  {"area_name": "Gorse Hill", "area_code": "E05000829", "value": 11},
-  {"area_name": "Hale Barns", "area_code": "E05000830", "value": 12},
-  {"area_name": "Hale Central", "area_code": "E05000831", "value": 13},
-  {"area_name": "Longford", "area_code": "E05000832", "value": 14},
-  {"area_name": "Priory", "area_code": "E05000833", "value": 15},
-  {"area_name": "St Mary's", "area_code": "E05000834", "value": 16},
-  {"area_name": "Sale Moor", "area_code": "E05000835", "value": 17},
-  {"area_name": "Stretford", "area_code": "E05000836", "value": 18},
-  {"area_name": "Timperley", "area_code": "E05000837", "value": 19},
-  {"area_name": "Urmston", "area_code": "E05000838", "value": 20},
-  {"area_name": "Village", "area_code": "E05000839", "value": 21}
+ {
+   "area_code": "E05000819",
+   "area_name": "Altrincham",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 12803
+ },
+ {
+   "area_code": "E05000820",
+   "area_name": "Ashton upon Mersey",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10209
+ },
+ {
+   "area_code": "E05000821",
+   "area_name": "Bowdon",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 9549
+ },
+ {
+   "area_code": "E05000822",
+   "area_name": "Broadheath",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 13829
+ },
+ {
+   "area_code": "E05000823",
+   "area_name": "Brooklands",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10701
+ },
+ {
+   "area_code": "E05000824",
+   "area_name": "Bucklow-St Martins",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10605
+ },
+ {
+   "area_code": "E05000825",
+   "area_name": "Clifford",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 12248
+ },
+ {
+   "area_code": "E05000826",
+   "area_name": "Davyhulme East",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 9804
+ },
+ {
+   "area_code": "E05000827",
+   "area_name": "Davyhulme West",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 9980
+ },
+ {
+   "area_code": "E05000828",
+   "area_name": "Flixton",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10807
+ },
+ {
+   "area_code": "E05000829",
+   "area_name": "Gorse Hill",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 12467
+ },
+ {
+   "area_code": "E05000830",
+   "area_name": "Hale Barns",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10219
+ },
+ {
+   "area_code": "E05000831",
+   "area_name": "Hale Central",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10820
+ },
+ {
+   "area_code": "E05000832",
+   "area_name": "Longford",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 12390
+ },
+ {
+   "area_code": "E05000833",
+   "area_name": "Priory",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 11633
+ },
+ {
+   "area_code": "E05000834",
+   "area_name": "St Mary's",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 11953
+ },
+ {
+   "area_code": "E05000835",
+   "area_name": "Sale Moor",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10744
+ },
+ {
+   "area_code": "E05000836",
+   "area_name": "Stretford",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 11314
+ },
+ {
+   "area_code": "E05000837",
+   "area_name": "Timperley",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 11207
+ },
+ {
+   "area_code": "E05000838",
+   "area_name": "Urmston",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 11343
+ },
+ {
+   "area_code": "E05000839",
+   "area_name": "Village",
+   "indicator": "Total resident population",
+   "period": "2017-06-30",
+   "measure": "Count",
+   "unit": "Persons",
+   "value": 10868
+ }
 ]
