@@ -1,0 +1,113 @@
+/* ### Trafford Data Lab website styles (extending the base styles) ### */
+
+.container
+{
+    overflow: auto;
+    position: relative;     /* Required for footer to be positioned always at the bottom of the page */
+    min-height: 100%;       /* Required for footer to be positioned always at the bottom of the page */
+}
+
+/* NOTE: all property sizes for elements within the header are expressed in px not em as we don't want the header to increase in size. This is because it might become too big on a small phone screen and prevent the user seeing the page content. */
+header
+{
+    position: fixed;
+    background-color: white;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 0 5px #f0f0f0;
+    z-index: 2;
+}
+
+.traffordDataLabLogo
+{
+    margin: 9px 12px 0 12px;
+    padding: 0 0 9px 0;
+    float: left;
+}
+
+#headerTitle
+{
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 16px;
+    font-size: 1.5em;
+    font-weight: normal;
+    color: #707070;
+}
+
+/* Contains the accessibility skip links - these are positioned off screen not hidden, so that they can be read out as well as focussed using keyboard */
+#a11yNav
+{
+    position: absolute;
+	top: -30em;
+	z-index: 333;
+    list-style-type: none;  /* remove the list-item bullets */
+}
+
+#a11yNav a
+{
+    position: absolute;
+    left: 0;
+    width: 20em;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    padding: 0.75em 0;
+    border-bottom-right-radius: 2.25em;
+}
+
+#a11yNav a:focus, #a11yNav a:hover
+{
+    top: 29em;
+}
+
+main
+{
+    margin: auto;
+    margin-top: 70px;
+    margin-bottom: 30px;
+    padding: 0 9% 5em 9%;     /* 5em padding-bottom Required for footer to be positioned always at the bottom of the page (This is the height of the footer) */
+}
+
+main p
+{
+    line-height: 1.8em;
+}
+
+main li
+{
+    line-height: 2em;
+}
+
+section
+{
+    margin-top: 2em;    /* usually pages have a couple of sections, this is to provide a bit of space between them */
+}
+
+/* thumbnail images */
+.thumbnail
+{
+    float: left;
+    margin-right: 1em;
+    box-shadow: 3px 3px 5px #f0f0f0;
+}
+
+/* content block usually paired with themeBlockLight */
+.contentBlock
+{
+    padding: 1em;
+    border-left: 4px solid #757575;
+}
+
+/* changes due to screen width */
+@media (min-width:1300px)
+{
+    /* This prevents the content going too wide once the screen goes beyond a maximum width. */
+    main
+    {
+        width: 1070px;
+        padding: 0 0 5em 0;
+    }
+}

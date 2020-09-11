@@ -7,12 +7,75 @@
     <meta name="keywords" content="trafford, vega-lite, choropleth, choropleths, map, documentation"/>
     <meta name="description" content="Choroplether documentation. Trafford Data Lab web application allowing the quick creation of choropleth map visualisations based on Vega-Lite."/>
 
-    <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labBase.css"/>
-    <link rel="stylesheet" href="https://www.trafforddatalab.io/css/labWebsite.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 
         <style>
+            /* visualisations and/or text content layouts */
+            .doubleColumnTxtImg div
+            {
+                width: 50%;
+                float: left;
+            }
+
+            .doubleColumnTxtImg div:nth-child(1) p
+            {
+                margin-right: 30px;     /* to provide space between any text content and the right column when displayed in 2-column format */
+            }
+
+            .doubleColumnTxtImg::after
+            {
+                content: "";
+                display: block;
+                clear: both;
+            }
+
+            .doubleColumnTxtImg img
+            {
+                width: 100%;
+            }
+
+            @media (max-width:800px)
+            {
+                /* visualisations and/or text content layouts */
+                .doubleColumnTxtImg div:nth-child(2)
+                {
+                    width: 500px;
+                    margin: auto;
+                }
+
+                .doubleColumnTxtImg div:nth-child(1)
+                {
+                    width: 100%;
+                }
+
+                .doubleColumnTxtImg div
+                {
+                    float: none;
+                }
+
+                .doubleColumnTxtImg div:nth-child(1) p
+                {
+                    margin-right: 0px;     /* remove space between any text content and the right column when displayed in 2-column format */
+                }
+            }
+
+            @media (max-width:620px)
+            {
+                /* visualisations and/or text content layouts */
+                .doubleColumnTxtImg, .doubleColumnTxtImg div, .doubleColumnTxtImg div:nth-child(2)
+                {
+                    width: 100%;
+                }
+
+                .doubleColumnTxtImg div:nth-child(1) p
+                {
+                    margin-right: 0px;     /* remove space between any text content and the right column when displayed in 2-column format */
+                }
+            }
+
             .bold
             {
                 font-weight: bold;
@@ -34,39 +97,16 @@
                 background-color: #ccc;
                 padding: 10px;
             }
-
-            #headerTitle
-            {
-                display: inline-block;
-                padding-top: 19px;
-                font-size: 20px;
-                color: #757575;
-            }
-
-            /* Overridden styles from labWebsite.css */
-            .traffordDataLabLogo
-            {
-                float: left;
-                padding-bottom: 9px;
-            }
-
-            @media (max-width:620px)
-            {
-                .main
-                {
-                    margin-top: 70px;
-                }
-            }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="header">
+            <header>
                 <a href="https://www.trafforddatalab.io/index.html" target="_blank"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
                 <span id="headerTitle">Choroplether</span>
-            </div>
+            </header>
 
-            <div class="main">
+            <main id="main">
                 <div class="doubleColumnTxtImg">
                     <div>
                         <h1>Choroplether documentation</h1>
@@ -212,24 +252,7 @@
                     <li><a href="https://fontawesome.com" target="_blank">Fontawesome</a> - (C) Fonticons, Inc. All rights reserved (<a href="https://fontawesome.com/license" target="_blank">LICENCE</a>)</li>
                     <li>All other code by <a href="https://www.trafforddatalab.io" target="_blank">Trafford Data Lab</a> (<a href="https://github.com/traffordDataLab/choroplether/blob/master/LICENSE" target="_blank">LICENCE</a>)</li>
                 </ul>
-            </div>
-
-            <div class="footer">
-                <div class="leftFooter">
-                    <div class="logoMedia">
-                        <span class="hideContent">Visit us on </span>
-                        <a class="linkMedia" href="https://twitter.com/traffordDataLab" target="_blank"><span class="fab fa-twitter-square"></span><span class="hideContent">Twitter</span></a>
-                        <span class="hideContent">, </span>
-                        <a class="linkMedia" href="https://github.com/traffordDataLab" target="_blank"><span class="fab fa-github"></span><span class="hideContent">Github</span></a>
-                        <span class="hideContent"> and </span>
-                        <a class="linkMedia" href="https://medium.com/@traffordDataLab" target="_blank"><span class="fab fa-medium"></span><span class="hideContent">Medium<br /></span></a>
-                    </div>
-                    <div class="license">Code <a class="footerLink" href="https://www.trafforddatalab.io/LICENSE.txt" target="_blank">licensed</a> under MIT, data under OGL</div>
-                </div>
-                <div class="rightFooter">
-                    <a href="https://www.trafford.gov.uk" target="_blank"><img class="logoTrafford" src="https://www.trafforddatalab.io/images/trafford_council_logo_black_on_white_100px.png" alt="Trafford Council" border="0"/></a>
-                </div>
-            </div>
+            </main>
         </div>
     </body>
 </html>
