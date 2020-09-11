@@ -196,8 +196,8 @@
                 <div id="layoutContainer">
                     <div id="toolsPanel">
                         <fieldset>
-                            <legend><a href="javascript:toggleContentSection('data')">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
-                            <div id="dataShowContent" class="showContentMsg hideContent" onclick="toggleContentSection('data')">Provide the data...</div>
+                            <legend><a href="javascript:toggleContentSection('data')" aria-label="Expand/collapse data section">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
+                            <div id="dataShowContent" class="showContentMsg hideContent">Provide the data...</div>
                             <div id="dataForm">
                                 Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format (use the links to view an example of each type of file) by:
                                 <br />
@@ -211,8 +211,8 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend onclick="toggleContentSection('geography')">Geography<span id="geographyToggle" class="fa fa-plus"></span></legend>
-                            <div id="geographyShowContent" class="showContentMsg" onclick="toggleContentSection('geography')">Choose a geography...</div>
+                            <legend><a href="javascript:toggleContentSection('geography')" aria-label="Expand/collapse geography section">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
+                            <div id="geographyShowContent" class="showContentMsg">Choose a geography...</div>
                             <div id="geographyForm" class="hideContent">
                                 Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
                                 <br />
@@ -250,7 +250,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend onclick="toggleContentSection('design')">Design<span id="designToggle" class="fa fa-plus"></span></legend>
+                            <legend><a href="javascript:toggleContentSection('design')" aria-label="Expand/collapse design section">Design<span id="designToggle" class="fa fa-plus"></span></a></legend>
                             <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">Customise the output...</div>
                             <div id="designForm" class="hideContent">
                                 Customise the output of the visualisation.
