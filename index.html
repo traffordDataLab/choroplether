@@ -54,13 +54,6 @@
                 resize: vertical;
             }
 
-            label
-            {
-                padding-right: 10px;
-                font-size: 0.9em;
-                font-weight: bold;
-            }
-
             legend a
             {
                 color: #fff;
@@ -148,7 +141,6 @@
                 }
             }
 
-
             /* Overridden styles from base.css */
             .labButton
             {
@@ -199,12 +191,11 @@
                             <legend><a href="javascript:toggleContentSection('data')" aria-label="Expand/collapse data section">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent">Provide the data...</div>
                             <div id="dataForm">
-                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format (use the links to view an example of each type of file) by:
+                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format (use the links to view an example of each type of file) by either:
                                 <br />
                                 <ul>
-                                    <li><span class="labButton" onclick="document.getElementById('localFileData').click()">Choosing a file</span> from your device,</li>
-                                    <li>Entering a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box or,</li>
-                                    <li>Entering data directly into the box</li>
+                                    <li><a class="labButton" href="javascript:document.getElementById('localFileData').click()">Choosing a file</a> from your device or</li>
+                                    <li><label for="data">Entering a <abbr title="Uniform Resource Locator">URL</abbr> or data directly into the following box:</label></li>
                                 </ul>
                                 <textarea id="data" onChange="checkData(this)"></textarea>
                             </div>
@@ -214,7 +205,7 @@
                             <legend><a href="javascript:toggleContentSection('geography')" aria-label="Expand/collapse geography section">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
                             <div id="geographyShowContent" class="showContentMsg">Choose a geography...</div>
                             <div id="geographyForm" class="hideContent">
-                                Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.
+                                <label for="geographyList">Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.</label>
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                     <optgroup label="Electoral Ward">
@@ -237,12 +228,11 @@
 
                                 <div id="geographyCustom" class="hideContent">
                                     <br />
-                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format by:
+                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format by either:
                                     <br />
                                     <ul>
-                                        <li><span class="labButton" onclick="document.getElementById('localFileGeography').click()">Choosing a file</span> from your device,</li>
-                                        <li>Entering a <abbr title="Uniform Resource Locator">URL</abbr> of a file into the box or,</li>
-                                        <li>Entering data directly into the box</li>
+                                        <li><a class="labButton" href="javascript:document.getElementById('localFileGeography').click()">Choosing a file</a> from your device or</li>
+                                        <li><label for="geography">Entering a <abbr title="Uniform Resource Locator">URL</abbr> or data directly into the following box:</label></li>
                                     </ul>
                                     <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
                                 </div>
@@ -251,7 +241,7 @@
 
                         <fieldset>
                             <legend><a href="javascript:toggleContentSection('design')" aria-label="Expand/collapse design section">Design<span id="designToggle" class="fa fa-plus"></span></a></legend>
-                            <div id="designShowContent" class="showContentMsg" onclick="toggleContentSection('design')">Customise the output...</div>
+                            <div id="designShowContent" class="showContentMsg">Customise the output...</div>
                             <div id="designForm" class="hideContent">
                                 Customise the output of the visualisation.
                                 <br /><br />
@@ -261,7 +251,7 @@
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
-                                Choose a palette from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; to enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme name</a>.
+                                <label for="paletteList">Choose a palette from the list</label> or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; to enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme name</a>
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
                                     <optgroup label="Sequential Single-Hue">
@@ -284,9 +274,9 @@
                                 </select>
 
                                 <div id="paletteCustom" class="hideContent">
-                                    <br />
-                                    <label for="palette" class="longInputBoxLabel">Palette name:</label><input type="text" id="palette" name="palette" class="longInputBox" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
-                                    <br />
+                                    <p>
+                                        <label for="palette" class="longInputBoxLabel">Palette name:</label><input type="text" id="palette" name="palette" class="longInputBox" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                    </p>
                                 </div>
                                 <p>
                                     Select the type of scale<span id="intervalsMsg" class="hideContent"> and number of intervals</span> to use.
