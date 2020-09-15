@@ -204,7 +204,7 @@
                             <legend aria-label="geography (currently collapsed)" aria-expanded="false" aria-live="polite"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
                             <div id="geographyShowContent" class="showContentMsg">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
-                                <label for="geographyList">Select a geography matching your data - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:</label>
+                                <label for="geographyList">Select a geography</label> matching your data - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                     <optgroup label="Electoral Ward">
@@ -306,7 +306,7 @@
                             </span> UPDATE
                         </a>
                     </div>
-                    <div id="vegaLiteViz"></div>
+                    <div id="vegaLiteViz" aria-live="polite"></div>
                 </div>
                 <br class="noFloat"/>
             </main>
