@@ -183,29 +183,28 @@
             </header>
 
             <main id="main">
-                <p>Choroplether allows the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> using your own data. A demonstration showing the <a href="https://www.ons.gov.uk/" target="_blank"><abbr title="Office for National Statistics">ONS</abbr></a> 2017 mid-year population estimates for Trafford's wards has been automatically generated. Please read the <a href="documentation.html" target="_blank">documentation</a> for more information on how to use the application.</p>
+                <p>Choroplether allows the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> using your own data. A demonstration showing the <abbr title="Office for National Statistics"><a href="https://www.ons.gov.uk/" target="_blank" aria-label="ONS - Office for National Statistics">ONS</a></abbr> 2017 mid-year population estimates for Trafford's wards has been automatically generated. <a href="documentation.html" target="_blank">The documentation</a> provides further details on using the app, however please note that Choroplether requires a modern browser - it will not work in Internet Explorer.</p>
 
                 <div id="layoutContainer">
                     <div id="toolsPanel">
                         <fieldset>
-                            <legend><a href="javascript:toggleContentSection('data')" aria-label="Expand/collapse data section">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
+                            <legend aria-label="data (currently expanded)" aria-expanded="true" aria-live="polite"><a id="dataToggleLink" href="javascript:toggleContentSection('data')" aria-label="collapse data section" role="button">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent">Provide the data...</div>
                             <div id="dataForm">
-                                Provide the data in <a href="data_example.csv" target="_blank"><abbr title="Comma Separated Values">CSV</abbr></a> or <a href="data_example.json" target="_blank"><abbr title="JavaScript Object Notation">JSON</abbr></a> format (use the links to view an example of each type of file) by either:
-                                <br />
-                                <ul>
-                                    <li><a class="labButton" href="javascript:document.getElementById('localFileData').click()">Choosing a file</a> from your device or</li>
-                                    <li><label for="data">Entering a <abbr title="Uniform Resource Locator">URL</abbr> or data directly into the following box:</label></li>
-                                </ul>
-                                <textarea id="data" onChange="checkData(this)"></textarea>
+                                Provide the data in <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format - <span style="font-style: italic;">use the links to download a template example of each file type</span>:
+                                <p>
+                                    <a class="labButton" href="javascript:document.getElementById('localFileData').click()" role="button">Choose a data file from your device</a> or
+                                </p>
+                                <label for="data">Enter the data or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label><br />
+                                <textarea id="data" onChange="checkData(this)" aria-label="data text box"></textarea>
                             </div>
                         </fieldset>
 
                         <fieldset>
-                            <legend><a href="javascript:toggleContentSection('geography')" aria-label="Expand/collapse geography section">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
-                            <div id="geographyShowContent" class="showContentMsg">Choose a geography...</div>
+                            <legend aria-label="geography (currently collapsed)" aria-expanded="false" aria-live="polite"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
+                            <div id="geographyShowContent" class="showContentMsg">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
-                                <label for="geographyList">Choose a geography from the list or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; for further options.</label>
+                                <label for="geographyList">Select a geography matching your data - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:</label>
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                     <optgroup label="Electoral Ward">
@@ -227,14 +226,14 @@
                                 </select>
 
                                 <div id="geographyCustom" class="hideContent">
-                                    <br />
-                                    Provide a custom geography in <a href="https://geojson.org/" target="_blank"><abbr title="Geographic data structure in JavaScript Object Notation">GeoJSON</abbr></a> format by either:
-                                    <br />
-                                    <ul>
-                                        <li><a class="labButton" href="javascript:document.getElementById('localFileGeography').click()">Choosing a file</a> from your device or</li>
-                                        <li><label for="geography">Entering a <abbr title="Uniform Resource Locator">URL</abbr> or data directly into the following box:</label></li>
-                                    </ul>
-                                    <textarea id="geography" onChange="checkGeography(this.value)"></textarea>
+                                    <p>
+                                        Provide the geography in <abbr title="Geographic data structure in JavaScript Object Notation"><a href="https://geojson.org/" target="_blank" aria-label="GeoJSON - Geographic data structure in JavaScript Object Notation">GeoJSON</a></abbr> format:
+                                    </p>
+                                    <p>
+                                        <a class="labButton" href="javascript:document.getElementById('localFileGeography').click()" role="button">Choose a geography file from your device</a> or
+                                    </p>
+                                    <label for="geography">Enter the geography or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label>
+                                    <textarea id="geography" onChange="checkGeography(this.value)" aria-label="geography text box"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -301,11 +300,11 @@
                             </div>
                         </fieldset>
 
-                        <span id="updateButton" onclick="createVisualisation()" title="Update the visualisation">
+                        <a id="updateButton" href="javascript:createVisualisation()" aria-label="Update the visualisation" role="button">
                             <span id="updateIconContainer" class="labButton">
-                                <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true" onclick="createVisualisation()"></span>
+                                <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true"></span>
                             </span> UPDATE
-                        </span>
+                        </a>
                     </div>
                     <div id="vegaLiteViz"></div>
                 </div>
@@ -528,6 +527,7 @@
                     var elementIcon = document.getElementById(name + 'Toggle');
                     var elementMessage = document.getElementById(name + 'ShowContent');
                     var elementForm = document.getElementById(name + 'Form');
+                    var elementLink = document.getElementById(name + 'ToggleLink');
 
                     // Font Awesome icon in the legend
                     elementIcon.classList.toggle('fa-minus');
@@ -535,6 +535,20 @@
 
                     elementMessage.classList.toggle('hideContent'); // message to show the full content
                     elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+
+                    // Accessibility features
+                    if (elementIcon.classList == 'fa fa-minus') {
+                        // section is expanded
+                        elementLink.setAttribute('aria-label', 'collapse ' + name + ' section');
+                        elementLink.parentNode.setAttribute('aria-expanded', 'true');
+                        elementLink.parentNode.setAttribute('aria-label', name + ' (currently expanded)');
+                    }
+                    else {
+                        // section is collapsed
+                        elementLink.setAttribute('aria-label', 'expand ' + name + ' section');
+                        elementLink.parentNode.setAttribute('aria-expanded', 'false');
+                        elementLink.parentNode.setAttribute('aria-label', name + ' (currently collapsed)');
+                    }
                 }
 
                 // Convey to the user that something is loading by spinning the update button icon
