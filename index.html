@@ -512,8 +512,10 @@
                 // ========= Console warn override to handle issues raised from the vegaEmbed catch clause =========
                 console.warnDefault = console.warn;     // Cache the default action for warn
 
-                function displayErrorMessage() {
-                    vizContainer.innerHTML = '<p>It is not possible to create a visualisation at the moment.</p><p>Check the data and/or the geography you are using.</p><p><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></p>';
+                function displayErrorMessage(msg) {
+                    var errMsg = (msg === undefined) ? 'Check the data and/or the geography you are using.' : msg;
+
+                    vizContainer.innerHTML = '<h2>Sorry, cannot create the map.</h2><p>' + errMsg + '</p><p><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></p>';
                 }
 
                 // overridden warn
@@ -586,21 +588,10 @@
                         }
                         catch(e) {
                             // we can't use window.FileReader or something else went wrong so inform the user
-                            alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
+                            displayErrorMessage('Can\'t load local files using this browser.<br />Please provide the data using another method.');
+                            //alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
                         }
                     }
-                }
-
-                // Attempt to obtain a remote file via URL
-                function remoteFileLoader(url) {
-                    labAjax(url, function (data) {
-                        if (data === null || data === '') {
-                            alertify.alert('Sorry, data couldn\'t be loaded...', 'Please check you entered the URL correctly. If so, it may be that the file no longer exists, the URL has changed or the server rejected the request.');
-                            return false;
-                        }
-
-                        processGeoJson(data);
-                    }, { type: 'txt' });    // Don't get labAjax to do the parsing - just return the content as-is and we parse it in the processGeoJson function
                 }
                 // =========
 
@@ -698,7 +689,8 @@
                             }
                             catch(e) {
                                 // Create an error message to inform the user that the GeoJSON isn't valid
-                                alertify.alert('Sorry, geography isn\'t valid...', "The geography you are trying to use doesn't seem to be GeoJSON. Please check it and try again.");
+                                displayErrorMessage('The geography isn\'t valid GeoJSON.<br />Please check it and try again.');
+                                //alertify.alert('Sorry, geography isn\'t valid...', "The geography you are trying to use doesn't seem to be GeoJSON. Please check it and try again.");
                             }
                         }
                     }
@@ -774,7 +766,8 @@
                             createVisualisation();                                          // update the visualisation
                         }
                         else {
-                            alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
+                            displayErrorMessage('The palette isn\'t a valid sequential Vega scheme.<br />Please check the list of valid scheme names.');
+                            //alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
                         }
                     }
                 }
