@@ -181,7 +181,7 @@
                             <legend aria-label="geography (currently collapsed)" aria-expanded="false"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="toggle to expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
                             <div id="geographyShowContent" class="showContentMsg" aria-label="Expand this section using the button to provide the geography">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
-                                <label for="geographyList">Select a geography</label> matching your data - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:
+                                <label for="geographyList">Select a geography</label> matching your data - choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                     <optgroup label="Electoral Ward">
@@ -199,7 +199,7 @@
                                     <optgroup label="Miscellaneous">
                                         <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
                                     </optgroup>
-                                    <option value="other">Other (custom)...</option>
+                                    <option value="other">Other (custom)</option>
                                 </select>
 
                                 <div id="geographyCustom" class="hideContent">
@@ -227,7 +227,7 @@
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
-                                <label for="paletteList">Select a palette</label> - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:
+                                <label for="paletteList">Select a palette</label> - choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
                                     <optgroup label="Sequential Single-Hue">
@@ -246,7 +246,7 @@
                                         <option value="yellowgreenblue">yellowgreenblue</option>
                                         <option value="yelloworangered">yelloworangered</option>
                                     </optgroup>
-                                    <option value="other">Other (custom)...</option>
+                                    <option value="other">Other (custom)</option>
                                 </select>
 
                                 <div id="paletteCustom" class="hideContent">
