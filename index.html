@@ -188,21 +188,21 @@
                 <div id="layoutContainer">
                     <div id="toolsPanel">
                         <fieldset>
-                            <legend aria-label="data (currently expanded)" aria-expanded="true" aria-live="polite"><a id="dataToggleLink" href="javascript:toggleContentSection('data')" aria-label="collapse data section" role="button">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
-                            <div id="dataShowContent" class="showContentMsg hideContent">Provide the data...</div>
+                            <legend aria-label="data (currently expanded)" aria-expanded="true"><a id="dataToggleLink" href="javascript:toggleContentSection('data')" aria-label="toggle to collapse data section" role="button">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
+                            <div id="dataShowContent" class="showContentMsg hideContent" aria-label="Expand this section using the button to provide the data">Provide the data...</div>
                             <div id="dataForm">
-                                Provide the data in <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format - <span style="font-style: italic;">use the links to download a template example of each file type</span>:
+                                <span id="dataInfo">Provide the data in <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format</span> - <span style="font-style: italic;">use the links to download a template example of each file type</span>:
                                 <p>
-                                    <a class="labButton" href="javascript:document.getElementById('localFileData').click()" role="button">Choose a data file from your device</a> or
+                                    <a class="labButton" href="javascript:document.getElementById('localFileData').click()" role="button" aria-describedby="dataInfo">Choose a data file from your device</a> or
                                 </p>
-                                <label for="data">Enter the data or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label><br />
+                                <label for="data" aria-describedby="dataInfo">Enter the data or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label><br />
                                 <textarea id="data" onChange="checkData(this)" aria-label="data text box"></textarea>
                             </div>
                         </fieldset>
 
                         <fieldset>
-                            <legend aria-label="geography (currently collapsed)" aria-expanded="false" aria-live="polite"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
-                            <div id="geographyShowContent" class="showContentMsg">Select a geography...</div>
+                            <legend aria-label="geography (currently collapsed)" aria-expanded="false"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="toggle to expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
+                            <div id="geographyShowContent" class="showContentMsg" aria-label="Expand this section using the button to provide the geography">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
                                 <label for="geographyList">Select a geography</label> matching your data - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:
                                 <br />
@@ -226,31 +226,31 @@
                                 </select>
 
                                 <div id="geographyCustom" class="hideContent">
-                                    <p>
-                                        Provide the geography in <abbr title="Geographic data structure in JavaScript Object Notation"><a href="https://geojson.org/" target="_blank" aria-label="GeoJSON - Geographic data structure in JavaScript Object Notation">GeoJSON</a></abbr> format:
+                                    <p id="geographyInfo">
+                                        Provide the geography in <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org/" target="_blank" aria-label="GeoJSON - Geospatial data in JavaScript Object Notation">GeoJSON</a></abbr> format:
                                     </p>
                                     <p>
-                                        <a class="labButton" href="javascript:document.getElementById('localFileGeography').click()" role="button">Choose a geography file from your device</a> or
+                                        <a id="geographyCustomFile" class="labButton" href="javascript:document.getElementById('localFileGeography').click()" role="button" aria-describedby="geographyInfo">Choose a geography file from your device</a> or
                                     </p>
-                                    <label for="geography">Enter the geography or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label>
+                                    <label for="geography" aria-describedby="geographyInfo">Enter the geography or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label>
                                     <textarea id="geography" onChange="checkGeography(this.value)" aria-label="geography text box"></textarea>
                                 </div>
                             </div>
                         </fieldset>
 
                         <fieldset>
-                            <legend><a href="javascript:toggleContentSection('design')" aria-label="Expand/collapse design section">Design<span id="designToggle" class="fa fa-plus"></span></a></legend>
-                            <div id="designShowContent" class="showContentMsg">Customise the output...</div>
+                            <legend aria-label="design (currently collapsed)" aria-expanded="false"><a id="designToggleLink" href="javascript:toggleContentSection('design')" aria-label="toggle to expand design section" role="button">Design<span id="designToggle" class="fa fa-plus"></span></a></legend>
+                            <div id="designShowContent" class="showContentMsg" aria-label="Expand this section using the button to customise the map">Customise the map...</div>
                             <div id="designForm" class="hideContent">
-                                Customise the output of the visualisation.
+                                Customise the map with titles, choose the palette etc.
                                 <br /><br />
-                                <label for="vizTitle" class="longInputBoxLabel">Chart title:</label><input type="text" id="vizTitle" name="vizTitle" class="longInputBox" placeholder="Optional: title for visualisation" onchange="updateTitle(this.value)"/>
+                                <label for="vizTitle" class="longInputBoxLabel">Map title:</label><input type="text" id="vizTitle" name="vizTitle" class="longInputBox" placeholder="Optional: title for map" onchange="updateTitle(this.value)"/>
                                 <br />
                                 <label for="vizLegendTitle" class="longInputBoxLabel">Legend title:</label><input type="text" id="vizLegendTitle" name="vizLegendTitle" class="longInputBox" placeholder="Optional: title for legend" onchange="updateLegendTitle(this.value)"/>
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
-                                <label for="paletteList">Choose a palette from the list</label> or select &quot;<span style="font-style: italic;">other (custom)...</span>&quot; to enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme name</a>
+                                <label for="paletteList">Select a palette</label> - <span style="font-style: italic;">choose &quot;other (custom)...&quot; for further options</span>:
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
                                     <optgroup label="Sequential Single-Hue">
@@ -273,8 +273,11 @@
                                 </select>
 
                                 <div id="paletteCustom" class="hideContent">
+                                    <p id="paletteInfo">
+                                        Enter a valid <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential palette scheme name</a>
+                                    </p>
                                     <p>
-                                        <label for="palette" class="longInputBoxLabel">Palette name:</label><input type="text" id="palette" name="palette" class="longInputBox" placeholder="Required: palette scheme name" onchange="updatePalette(this)"/>
+                                        <label for="palette" class="longInputBoxLabel" aria-describedby="paletteInfo">Palette name:</label><input type="text" id="palette" name="palette" class="longInputBox" placeholder="Required: sequential scheme name" onchange="updatePalette(this)"/>
                                     </p>
                                 </div>
                                 <p>
@@ -539,13 +542,13 @@
                     // Accessibility features
                     if (elementIcon.classList == 'fa fa-minus') {
                         // section is expanded
-                        elementLink.setAttribute('aria-label', 'collapse ' + name + ' section');
+                        elementLink.setAttribute('aria-label', 'toggle to collapse ' + name + ' section');
                         elementLink.parentNode.setAttribute('aria-expanded', 'true');
                         elementLink.parentNode.setAttribute('aria-label', name + ' (currently expanded)');
                     }
                     else {
                         // section is collapsed
-                        elementLink.setAttribute('aria-label', 'expand ' + name + ' section');
+                        elementLink.setAttribute('aria-label', 'toggle to expand ' + name + ' section');
                         elementLink.parentNode.setAttribute('aria-expanded', 'false');
                         elementLink.parentNode.setAttribute('aria-label', name + ' (currently collapsed)');
                     }
@@ -658,6 +661,7 @@
                     if (geogVal === 'other') {
                         customGeogContainer.classList.remove('hideContent');    // remove the 'hideContent' class from the custom geography div
                         geogVal = document.getElementById('geography').value    // NOTE: the onchange event of the 'geography' textbox also calls checkGeography()
+                        document.getElementById('geographyCustomFile').focus();
                     }
                     else if (!customGeogContainer.classList.contains('hideContent')) {
                         customGeogContainer.classList.add('hideContent');       // add the 'hideContent' class to the custom geography div
@@ -744,11 +748,16 @@
                     var paletteCustom = document.getElementById('paletteCustom');           // the container for the custom text box
 
                     if (paletteName === 'other') {
+                        var paletteCustomInput = document.getElementById('palette');
+
                         // we need to make sure that the "other" palette text box is visible
                         if (paletteCustom.classList.contains('hideContent')) paletteCustom.classList.remove('hideContent');
 
                         // load the value from the text box ready for further testing below - it could be blank or have a previous value entered by the user
-                        paletteName = document.getElementById('palette').value;
+                        paletteName = paletteCustomInput.value;
+
+                        // set focus to the custom palette input box
+                        paletteCustomInput.focus();
                     }
                     else {
                         // we need to make sure that the "other" palette text box is hidden if the current select list value is not "other"
