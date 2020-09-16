@@ -102,14 +102,8 @@
 
             #updateButton
             {
-                cursor: pointer;
                 margin-left: 10px;
-            }
-
-            /* This span also has the class labButton applied to it */
-            #updateIconContainer
-            {
-                padding: 6px 6px 4px 6px;
+                padding: 6px 12px 4px 6px;
                 border-radius: 20px;
             }
 
@@ -117,6 +111,7 @@
             #updateIcon
             {
                 font-size: 20px;
+                margin-right: 4px;
             }
 
             @media (max-width:1160px)
@@ -285,13 +280,12 @@
                             </div>
                         </fieldset>
 
-                        <a id="updateButton" href="javascript:createVisualisation()" aria-label="Update the visualisation" role="button">
-                            <span id="updateIconContainer" class="labButton">
-                                <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true"></span>
-                            </span> UPDATE
+                        <a id="updateButton" href="javascript:createVisualisation()" aria-label="Update the map" class="labButton" role="button">
+                            <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true"></span>
+                            UPDATE
                         </a>
                     </div>
-                    <div id="vegaLiteViz" aria-live="polite"></div>
+                    <div id="vegaLiteViz" aria-live="assertive"></div>
                 </div>
                 <br class="noFloat"/>
             </main>
