@@ -11,8 +11,6 @@
         <link rel="stylesheet" href="css/main.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/themes/default.min.css"/>
 
         <style>
             fieldset
@@ -147,22 +145,6 @@
                 font-size: 1em;
                 margin: 0;
                 padding: 0 10px;
-            }
-
-            /* Alertify theme overridden styles */
-            .alertify .ajs-header
-            {
-                color: #707070;
-            }
-
-            .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok, .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-cancel
-            {
-                color: #046dc3;
-            }
-
-            .alertify button:focus, .alertify input:focus
-            {
-                outline: 2px solid #046dc3;
             }
 
             /* Font-Awesome overridden styles */
@@ -326,8 +308,6 @@
         <script src="https://cdn.jsdelivr.net/npm/vega@5.5.3"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.1"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
-        <!-- Alertify - Nice feedback mechanism to the user for errors and issues -->
-        <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
         <!-- Our external file loader -->
         <script src="https://www.trafforddatalab.io/assets/javascript/labAjax.js"></script>
 
@@ -338,14 +318,12 @@
                 Created:        2019-09-04 by James Austin - Trafford Data Lab
                 Purpose:        Allow users to create Vega-Lite choropleth visualisations easily
                 Dependencies:   Vega-Lite - (C) University of Washington Interactive Data Lab https://vega.github.io/vega-lite/
-                                Alertify.js - (C) Mohammad Younes http://alertifyjs.com
                                 Fontawesome - (C) Fonticons, Inc. All rights reserved https://fontawesome.com
                                 All other code by Trafford Data Lab
 
                 Licence:        Vega-Lite: https://github.com/vega/vega-lite/blob/master/LICENSE
-                                Alertify: https://opensource.org/licenses/gpl-3.0
                                 Fontawesome: https://fontawesome.com/license
-                                Trafford Data Lab:
+                                Trafford Data Lab: https://github.com/traffordDataLab/choroplether/blob/master/LICENSE
 
             */
 
@@ -589,7 +567,6 @@
                         catch(e) {
                             // we can't use window.FileReader or something else went wrong so inform the user
                             displayErrorMessage('Can\'t load local files using this browser.<br />Please provide the data using another method.');
-                            //alertify.alert('Sorry, unable to load local file...','Unfortunately it is not possible to load local files using this browser. Please choose one of the other methods available for loading data.');
                         }
                     }
                 }
@@ -676,7 +653,7 @@
                         // Is the content a URL (must be https://) or pasted data?
                         if (geogVal.substring(0, 8) === 'https://') {
                             vegaLiteSpec.layer[0].data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
-                            createVisualisation();              // update the visualisation
+                            createVisualisation();                       // update the visualisation
                         }
                         else {
                             // the data must be in the box directly, either pasted or loaded locally
@@ -690,7 +667,6 @@
                             catch(e) {
                                 // Create an error message to inform the user that the GeoJSON isn't valid
                                 displayErrorMessage('The geography isn\'t valid GeoJSON.<br />Please check it and try again.');
-                                //alertify.alert('Sorry, geography isn\'t valid...', "The geography you are trying to use doesn't seem to be GeoJSON. Please check it and try again.");
                             }
                         }
                     }
@@ -762,12 +738,11 @@
                         // We do this by checking if there is a key with the same name in the object vegaLiteSequentialPalettes.
                         // If there is it will return true, otherwise null - saves looping through an array etc.
                         if (vegaLiteSequentialPalettes[paletteName.toLowerCase()]) {
-                            vegaLiteSpec.layer[0].encoding.color.scale.scheme.name = paletteName;    // uses the value from the palette list or the custom text box if the palette list option is "other"
-                            createVisualisation();                                          // update the visualisation
+                            vegaLiteSpec.layer[0].encoding.color.scale.scheme.name = paletteName;   // uses the value from the palette list or the custom text box if the palette list option is "other"
+                            createVisualisation();                                                  // update the visualisation
                         }
                         else {
                             displayErrorMessage('The palette isn\'t a valid sequential Vega scheme.<br />Please check the list of valid scheme names.');
-                            //alertify.alert('Sorry, palette scheme name isn\'t valid...', "The palette you have chosen isn't a valid sequential Vega scheme. Please check the list of valid schemes and try again.");
                         }
                     }
                 }
