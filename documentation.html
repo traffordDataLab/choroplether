@@ -81,7 +81,7 @@
                 font-weight: bold;
             }
 
-            .italic
+            abbr, .italic
             {
                 font-style: italic;
             }
@@ -103,7 +103,7 @@
         <div class="container">
             <header>
                 <nav>
-                    <a href="https://www.trafforddatalab.io/index.html" target="_blank"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
+                    <a href="https://www.trafforddatalab.io/index.html" aria-label="Go to the Trafford Data Lab home page"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
                 </nav>
                 <span id="headerTitle">Choroplether</span>
             </header>
@@ -124,7 +124,7 @@
 
                         <a name="intro"></a><h2>Introduction</h2>
                         <p>
-                            <a href="index.html">Choroplether</a> is a web application that allows you to create <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> without having to write all the code yourself. The resulting output can be saved as an <span class="italic"><abbr title="Scalable Vector Graphics">SVG</abbr></span> or <span class="italic"><abbr title="Portable Network Graphics">PNG</abbr></span> image or opened within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> for further customisation. You can also <a href="https://github.com/vega/vega-embed" target="_blank">embed it in a webpage</a> if you require an interactive visualisation.
+                            <a href="index.html">Choroplether</a> is a web application that allows you to create <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> without having to write all the code yourself. The resulting output can be saved as an <abbr title="Scalable Vector Graphics">SVG</abbr> or <abbr title="Portable Network Graphics">PNG</abbr> image or opened within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> for further customisation. You can also embed the map in a webpage using <a href="https://github.com/vega/vega-embed" target="_blank">Vega-embed</a> if you require an interactive visualisation.
                         </p>
                     </div>
                     <div>
@@ -133,63 +133,59 @@
                 </div>
 
                 <p>
-                    You supply some suitably formatted data, select or provide a spatial geography that matches the data and then customise the appearance. The interface is split into 3 sections: <a href="#data"><strong>Data</strong></a>, <a href="#geography"><strong>Geography</strong></a> and <a href="#design"><strong>Design</strong></a>, each can be collapsed and expanded as required by selecting the relevant orange losenge. The app automatically attempts to update the visualisation as you make changes in any of the sections, or when you select the <strong>UPDATE</strong> button.
+                    You supply some suitably formatted data, select or provide a spatial geography that matches the data and then customise the appearance. The interface is split into 3 sections: <a href="#data"><strong>Data</strong></a>, <a href="#geography"><strong>Geography</strong></a> and <a href="#design"><strong>Design</strong></a>, each can be collapsed and expanded as required by activating the toggle button at the top of each section. The app attempts to update the visualisation as you make changes in any of the sections, or when you activate the <strong>UPDATE</strong> button.
                 </p>
                 <br />
 
                 <a name="demo"></a><h2>Demonstration</h2>
                 <p>
-                    <img src="docs_images/design.png" width="300" alt="Screenshot of design section." class="screenshot" style="float: left; margin-right: 20px; margin-bottom: 10px; padding: 10px;"/>
-                    The app loads with an example datset already visualised: mid-2017 population estimates from the <a href="https://www.ons.gov.uk/" target="_blank">Office for National Statistics</a> for the electoral wards of Trafford.
+                    <img src="docs_images/design.png" width="300" alt="Screenshot of the design section expanded." class="screenshot" style="float: left; margin-right: 20px; margin-bottom: 10px; padding: 10px;"/>
+                    The app loads with an example dataset already visualised: mid-2017 population estimates from the <a href="https://www.ons.gov.uk/" target="_blank">Office for National Statistics</a> for the electoral wards of Trafford.
                 </p>
                 <p>
-                    Expand the <a href="#design"><strong>Design</strong></a> section as shown in the image and add a title by entering some text in the <strong>Chart title:</strong> box. Now select <strong>UPDATE</strong> to see the title added to the visualisation.
+                    Expand the <strong>Design</strong> section using the toggle button and add a title by entering some text in the <strong>Map title:</strong> text box. Activate the <strong>UPDATE</strong> button and your title will be added to the map.
                 </p>
                 <p>
-                    Next try changing the palette from <strong>oranges</strong> to <strong>teals</strong>.
+                    Next try changing the palette from <strong>tealblues</strong> to <strong>oranges</strong>.
                 </p>
                 <p>
-                    Finally select each of the different scale options and see how the visualisation and legend changes (you can find out what each scale option does in the <a href="#design"><strong>Design</strong></a> section). This should give you an idea of how to customise the output.
-                </p>
-                <p>
-                    Read on to learn how to create a visualisation based on your own data.
+                    Finally select each of the different scale options and see how the map visualisation and legend changes (you can find out what each scale option does in the <a href="#design"><strong>Design</strong></a> section of this documentation). This should give you an idea of how to customise the output. The next section explains how to create a map based on your own data.
                 </p>
                 <br class="noFloat"/>
 
                 <a name="data"></a><h2>Data</h2>
                 <p>
-                    <img src="docs_images/data.png" width="300" alt="Screenshot of data section." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
-                    This is where you specify the dataset that will be visualised, either by choosing a local file from your device, providing the <span class="italic"><abbr title="Uniform Resource Locator">URL</abbr></span> of an externally hosted file or pasting the data directly into the box. The data can be in either <a href="data_example.csv" target="_blank" class="italic"><abbr title="Comma Separated Values"><strong>CSV</strong></abbr></a> or <a href="data_example.json" target="_blank" class="italic"><abbr title="JavaScript Object Notation"><strong>JSON</strong></abbr></a> format. The links provide you with example files to help ensure you structure your data correctly. Once you have entered some data the app will attempt to visualise it. If your data relates to the geography currently selected in the <a href="#geography"><strong>Geography</strong></a> section it should produce a visualisation straightaway, otherwise the following notification will be displayed.
+                    <img src="docs_images/data.png" width="300" alt="Screenshot of the data section expanded." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
+                    This is where you specify the dataset that will be visualised, either by choosing a local file from your device, providing the <abbr title="Uniform Resource Locator">URL</abbr> (which must be secure, i.e. https://) of an externally hosted file or pasting the data directly into the box. The data can be in either <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format. The links provide you with example files which you can use as a template to help ensure you structure your data correctly. Once you have entered some data the app will attempt to visualise it. If your data relates to the geography currently selected in the <strong>Geography</strong> section it should produce a visualisation straightaway, otherwise the warning notification will be displayed asking you to check your data and/or the geography.
                 </p>
                 <p>
-                    <img src="docs_images/warning.png" width="200" alt="Screenshot of warning message." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
-                    This means either that the data you have provided doesn't match the currently selected geography (see next section for more on this) or there is an error in your data. The most important aspects are:
+                    <img src="docs_images/warning.png" width="200" alt="Screenshot of the warning message." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
+                    The warning message means either that the data you have provided doesn't match the currently selected geography (the next section explains this in more detail) or there is something wrong with your data. The most important aspects are:
                     <br /><br />
-                    1. The data must contain the field <strong>value</strong> which contains the values to be visualised
+                    1. The data must contain the field &quot;<strong>value</strong>&quot; which contains the values to be visualised
                     <br />
-                    2. Both the data and the geography must contain the field <strong>area_code</strong></span> as this is the joining variable used to match the data to the spatial geography
+                    2. Both the data and the geography must contain the field &quot;<strong>area_code</strong>&quot; as this is the joining variable used to match the data to the spatial geography
                 </p>
                 <p>
-                    You can find the <span class="italic"><abbr title="Office for National Statistics">ONS</abbr></span> codes for different administrative and statistical geographies from the <a href="http://geoportal.statistics.gov.uk/" target="_blank">Open Geography Portal</a>.
+                    You can find the <abbr title="Office for National Statistics">ONS</abbr> codes for different administrative and statistical geographies from the <a href="http://geoportal.statistics.gov.uk/" target="_blank">Open Geography Portal</a>.
                 </p>
                 <br class="noFloat"/>
 
-
-                <a name="geography"></a><h3>Geography</h3>
+                <a name="geography"></a><h2>Geography</h2>
                 <p>
-                    <img src="docs_images/geography_initial.png" width="300" alt="Screenshot of geography section." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
-                    The geography is a spatial data file which describes the shapes associated with the data (e.g. the Electoral Wards within a Local Authority) as polygons using latitude and longitude coordinates. The list is pre-populated with different geographic boundaries within Trafford and Greater Manchester. If your data is related to a different geographic location or type of geography select the <strong>Other (custom)...</strong> option.
+                    <img src="docs_images/geography_initial.png" width="300" alt="Screenshot of the geography section expanded." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
+                    The geography is a spatial data file which describes the shapes associated with the data (e.g. the Electoral Wards within a Local Authority) as polygons using latitude and longitude coordinates. The list is pre-populated with different geographic boundaries within Trafford and Greater Manchester. If your data is related to a different geographic location or type of geography select the <strong>Other (custom)</strong> option.
                 </p>
                 <p>
-                    <img src="docs_images/geography_other.png" width="300" alt="Screenshot of custom geography section." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
-                    You can now provide your geography in a similar way to the data, e.g. by choosing a local file from your device, providing the <span class="italic"><abbr title="Uniform Resource Locator">URL</abbr></span> of an externally hosted file or pasting the data directly into the box.
+                    <img src="docs_images/geography_other.png" width="300" alt="Screenshot of the geography section expanded and custom option selected." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
+                    You can now provide your geography in a similar way to the data, e.g. by choosing a local file from your device, providing the <abbr title="Uniform Resource Locator">URL</abbr> (which must be secure, i.e. https://) of an externally hosted file or pasting the data directly into the box.
                 </p>
                 <p>
-                    The geography must be valid <a href="https://geojson.org" target="_blank" class="italic"><abbr title="Geographic JavaScript Object Notation">GeoJSON</strong></abbr></a>, an open-source spatial format, and each <strong>Feature</strong> must contain the key <strong>area_code</strong> to identify it. This key is used to match the features in the spatial geography to the data. The following example from a spatial file describing Trafford's Electoral Wards should hopefully demonstrate this:
+                    The geography must be valid <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org" target="_blank">GeoJSON</a></abbr>, an open-source spatial format, and each &quot;<strong>Feature</strong>&quot; must contain the key &quot;<strong>area_code</strong>&quot; to identify it. This key is used to match the features in the spatial geography to the data. The following example from a spatial file describing Trafford's Electoral Wards should hopefully demonstrate this:
                 </p>
                 <br class="noFloat"/>
                 <br />
-                <code class="code">
+                <code class="code" aria-label="Example code of a GeoJSON geography file">
                     <pre>
     {
         "type": "FeatureCollection",
@@ -206,44 +202,44 @@
                     "coordinates": [...
                     </pre>
                 </code>
-                <p>The ward of Altrincham has an <strong>area_code</strong> of E05000819. In the example data files this <strong>area_code</strong> has the value <strong>12803</strong>. This value is assigned to a colour based on the range of values within the dataset and the type of <span class="italic">scale</span> you want to use (see the <a href="#design">Design</a> section). The result is the shape of Altrincham ward will be displayed, filled with the assigned colour.</p>
+                <p>The ward of Altrincham has an <strong>area_code</strong> of E05000819. In the example data files this <strong>area_code</strong> has the value <strong>12803</strong>. This value is assigned to a colour based on the range of values within the dataset and the type of <strong>scale</strong> you want to use, (this is explained in the Design section). The result is the shape of Altrincham ward will be displayed, filled with the assigned colour.</p>
                 <br class="noFloat"/>
 
-                <a name="design"></a><h3>Design</h3>
+                <a name="design"></a><h2>Design</h2>
                 <p>
-                    <img src="docs_images/design.png" width="300" alt="Screenshot of design section." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
-                    The final section is where you specify how your finished visualisation will look, allowing you to add titles, attribution, select the palette and also choose the scale used to assign the palette to the data. The palette options provided in the select list are a subset of the Vega <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme names</a>. You can use any palette listed via the link within Vega-Lite, but Choroplether will only allow sequential palettes (single-hue and multi-hue) to be used. This is because sequential palettes are the most appropriate types to use for a choropleth map displaying differences in continuous data (e.g. population) rather than categorical data. If the palette you want is not listed, you can choose <strong>Other (custom)...</strong> and type in the scheme name into the box provided. If you require a non-sequential palette you can edit the visualisation within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> (see the <a href="#exportedit">Exporting and further editing</a> section for more information).
+                    <img src="docs_images/design.png" width="300" alt="Screenshot of the design section expanded." class="screenshot" style="float: right; margin-left: 20px; padding: 10px;"/>
+                    The final section is where you specify how your finished map will look, allowing you to add titles, attribution, select the palette and also choose the scale used to assign the palette to the data. The palette options provided in the select list are a subset of the Vega <a href="https://vega.github.io/vega/docs/schemes/#seq-single-hue" target="_blank">sequential scheme names</a>. You can use any palette listed via the link within Vega-Lite, but Choroplether will only allow sequential palettes (single-hue and multi-hue) to be used. This is because sequential palettes are the most appropriate types to use for a choropleth map displaying differences in continuous data (e.g. population) rather than categorical data. If the palette you want is not listed, you can choose the <strong>Other (custom)</strong> option which will then display a text box for you to type in the scheme name. If you require a non-sequential palette you can edit the visualisation within the Vega Editor, (the <a href="#exportedit">Exporting and further editing</a> section has more information about this).
                 </p>
                 <p>
-                    The scale determines how the colours are assigned to the map based on the data being displayed.  There are 3 options: <strong>Linear</strong>, <strong>Quantile</strong> and <strong>Equal intervals</strong>. An additional <span class="italic">Intervals</span> selection appears except when the <strong>Linear</strong> option is chosen.
+                    The scale determines how the colours are assigned to the map based on the data being displayed.  There are 3 options: <strong>Linear</strong>, <strong>Quantile</strong> and <strong>Equal intervals</strong>. An additional <strong>Intervals</strong> selection list appears except when the <strong>Linear</strong> option is chosen.
                 </p>
                 <ul>
                     <li><strong>Linear</strong>: Assigns a unique colour from the palette to each unique value in the dataset range</li>
-                    <li><strong>Quantile</strong>: Splits the dataset range into the number of intervals specified in the <span class="italic">intervals</span> select list, assigning an <span class="italic">equal number of observations</span> to each interval. The range of values within each interval can be different.</li>
-                    <li><strong>Equal intervals</strong>: Splits the dataset range into the number of intervals specified in the <span class="italic">intervals</span> select list, assigning an <span class="italic">equal range of values</span> within each interval. The number of observations within each interval can be different.</li>
+                    <li><strong>Quantile</strong>: Splits the dataset range into the number of intervals specified in the <strong>intervals</strong> select list, assigning an <span class="italic">equal number of observations</span> to each interval. The range of values within each interval can be different.</li>
+                    <li><strong>Equal intervals</strong>: Splits the dataset range into the number of intervals specified in the <strong>intervals</strong> select list, assigning an <span class="italic">equal range of values</span> within each interval. The number of observations within each interval can be different.</li>
                 </ul>
                 <p>
                     The choice of scale depends on your data and what you are trying to show with the visualisation. The number of intervals available are between 4 and 7 inclusive. If you require a different number you will need to use the Vega Editor.
                 </p>
                 <br class="noFloat"/>
 
-                <a name="exportedit"></a><h3>Exporting and further editing</h3>
+                <a name="exportedit"></a><h2>Exporting and further editing</h2>
                 <p>
                     <img src="docs_images/export.png" width="150" alt="Screenshot of export options." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
-                    Hovering over your visualisation will highlight a circle icon containing 3 dots in the top-right corner. Selecting this icon provides the export options available to you.
+                    Located in the top-right corner of the map visualisation is a circle icon containing 3 dots. Selecting this icon provides the export options available to you.
                 </p>
                 <p>
                     If you are happy with your visualisation and simply need a static graphic to include in a report or presentation you can choose either the <strong>Save as <abbr title="Scalable Vector Graphics">SVG</abbr></strong> or <strong>Save as <abbr title="Portable Network Graphics">PNG</abbr></strong> options to create an image file in the relevant format.
                 </p>
                 <p>
-                    To embed the interactive visualisation within a webpage you will need to choose <strong>View Source</strong> which provides the <a href="https://vega.github.io/vega-lite/docs/spec.html" target="_blank">Vega-Lite specification</a> (code) of your visualisation. You will then need to use the <a href="https://github.com/vega/vega-embed" target="_blank">Vega-Embed</a> tool (as Choroplether does) along with your specification. (The <strong>View Compiled Vega</strong> option is only relevant if you need to use features from the full <a href="https://vega.github.io/vega/" target="_blank">Vega</a> specification as opposed to <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a>.)
+                    To embed the interactive visualisation within a webpage you will need to choose <strong>View Source</strong> which provides the <a href="https://vega.github.io/vega-lite/docs/spec.html" target="_blank">Vega-Lite specification</a> (essentially the code) of your visualisation. You will then need to use the <a href="https://github.com/vega/vega-embed" target="_blank">Vega-Embed</a> tool (as Choroplether does) along with your specification. (The <strong>View Compiled Vega</strong> option is only relevant if you need to use features from the full <a href="https://vega.github.io/vega/" target="_blank">Vega</a> specification as opposed to Vega-Lite.)
                 </p>
                 <p>
-                    Finally, <strong>Open in Vega Editor</strong> allows you to tweak and customise your visualisation further by editing the code in the online editor. To use this effectively you will need to read the <a href="https://vega.github.io/vega-lite/docs/" target="_blank">Vega-Lite documentation</a> and understand the <a href="https://vega.github.io/vega-lite/docs/spec.html" target="_blank">Vega-Lite specification</a>.
+                    Finally, <strong>Open in Vega Editor</strong> allows you to tweak and customise your visualisation further by editing the code in the online editor. To use this effectively you will need to read the <a href="https://vega.github.io/vega-lite/docs/" target="_blank">Vega-Lite documentation</a> and understand the Vega-Lite specification.
                 </p>
                 <br class="noFloat"/>
 
-                <a name="credits"></a><h3>Credits</h3>
+                <a name="credits"></a><h2>Credits</h2>
                 <p>
                     Choroplether was created using the following:
                 </p>
