@@ -788,6 +788,22 @@
                         displayErrorMessage();
                         updateButtonReset();
                     });
+
+                    // add accessibility aria-label to the <detail>s action menu to explain its purpose
+                    // has to be done in a setInterval in case the <details> element hasn't been created yet
+                    var actionMenuA11yCb;
+
+                    actionMenuA11yCb = setInterval(function () {
+                        try {
+                            var vegaActionMenu = document.getElementsByTagName('details')[0];
+                            vegaActionMenu.setAttribute('aria-label', 'actions menu including options to download the map');
+
+                            clearInterval(actionMenuA11yCb);
+                        }
+                        catch(e) {
+                            // do nothing, the function will be called again in 100ms
+                        }
+                    }, 100);
                 }
 
                 // On page load, pre-complete the data textbox with the example file and produce an initial visualisation as a demonstration
