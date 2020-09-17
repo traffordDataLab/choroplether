@@ -23,7 +23,6 @@ header
 {
     margin: 9px 12px 0 12px;
     padding: 0 0 9px 0;
-    float: left;
 }
 
 #headerTitle
@@ -61,6 +60,11 @@ header
 #a11yNav a:focus, #a11yNav a:hover
 {
     top: 29em;
+}
+
+nav
+{
+    float: left;
 }
 
 main
