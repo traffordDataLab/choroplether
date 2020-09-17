@@ -68,7 +68,7 @@ main
     margin: auto;
     margin-top: 70px;
     margin-bottom: 30px;
-    padding: 0 9% 5em 9%;     /* 5em padding-bottom Required for footer to be positioned always at the bottom of the page (This is the height of the footer) */
+    padding: 0 9% 1em 9%;
 }
 
 main p
