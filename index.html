@@ -804,12 +804,19 @@
 
                     vizContainer.innerHTML = '';    // clear any previous visualisation
 
-                    vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).then(function(result) {
+                    try {
+                        vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).then(function(result) {
+                            updateButtonReset();
+                        }).catch(function (error) {
+                            displayErrorMessage();
+                            updateButtonReset();
+                        });
+                    }
+                    catch(e) {
+                        // unexpected error
+                        displayErrorMessage('An unexpected error occurred:<br />' + e.description);
                         updateButtonReset();
-                    }).catch(function (error) {
-                        displayErrorMessage();
-                        updateButtonReset();
-                    });
+                    }
 
                     // add accessibility aria-label to the <detail>s action menu to explain its purpose
                     // has to be done in a setInterval in case the <details> element hasn't been created yet
