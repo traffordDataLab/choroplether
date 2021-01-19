@@ -34,7 +34,7 @@
                 padding: 0 8px;
             }
 
-            legend:hover, .showContentMsg:hover
+            legend:hover
             {
                 cursor: pointer;
             }
@@ -187,12 +187,12 @@
                 <div id="layoutContainer">
                     <div id="toolsPanel">
                         <fieldset>
-                            <legend aria-label="data (currently expanded)" aria-expanded="true"><a id="dataToggleLink" href="javascript:toggleContentSection('data')" aria-label="toggle to collapse data section" role="button">Data<span id="dataToggle" class="fa fa-minus"></span></a></legend>
+                            <legend aria-label="data section, expanded"><button id="dataToggleLink" type="button" onclick="toggleContentSection('data')" aria-label="data section" aria-expanded="true">Data<span id="dataToggle" class="fa fa-minus"></span></button></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent" aria-label="Expand this section using the button to provide the data">Provide the data...</div>
                             <div id="dataForm">
                                 <span id="dataInfo">Provide the data in <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format,</span> (use the links to download a template example of each file type):
                                 <p>
-                                    <a class="labButton" href="javascript:document.getElementById('localFileData').click()" role="button" aria-describedby="dataInfo">Choose a data file from your device</a> or
+                                    <button type="button" class="labButton" onclick="document.getElementById('localFileData').click()" aria-describedby="dataInfo">Choose a data file from your device</button> or
                                 </p>
                                 <label for="data" aria-describedby="dataInfo">Enter the data or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label><br />
                                 <textarea id="data" onChange="checkData(this)" aria-label="data text box"></textarea>
@@ -200,7 +200,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend aria-label="geography (currently collapsed)" aria-expanded="false"><a id="geographyToggleLink" href="javascript:toggleContentSection('geography')" aria-label="toggle to expand geography section" role="button">Geography<span id="geographyToggle" class="fa fa-plus"></span></a></legend>
+                            <legend aria-label="geography section, collapsed"><button id="geographyToggleLink" type="button" onclick="toggleContentSection('geography')" aria-label="geography section" aria-expanded="false">Geography<span id="geographyToggle" class="fa fa-plus"></span></button></legend>
                             <div id="geographyShowContent" class="showContentMsg" aria-label="Expand this section using the button to provide the geography">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
                                 <label for="geographyList">Select a geography</label> matching your data - choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
@@ -229,7 +229,7 @@
                                         Provide the geography in <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org/" target="_blank" aria-label="GeoJSON - Geospatial data in JavaScript Object Notation">GeoJSON</a></abbr> format:
                                     </p>
                                     <p>
-                                        <a id="geographyCustomFile" class="labButton" href="javascript:document.getElementById('localFileGeography').click()" role="button" aria-describedby="geographyInfo">Choose a geography file from your device</a> or
+                                        <button type="button" id="geographyCustomFile" class="labButton" onclick="document.getElementById('localFileGeography').click()" aria-describedby="geographyInfo">Choose a geography file from your device</button> or
                                     </p>
                                     <label for="geography" aria-describedby="geographyInfo">Enter the geography or its <abbr title="Uniform Resource Locator">URL</abbr> into the text box:</label>
                                     <textarea id="geography" onChange="checkGeography(this.value)" aria-label="geography text box"></textarea>
@@ -238,7 +238,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend aria-label="design (currently collapsed)" aria-expanded="false"><a id="designToggleLink" href="javascript:toggleContentSection('design')" aria-label="toggle to expand design section" role="button">Design<span id="designToggle" class="fa fa-plus"></span></a></legend>
+                            <legend aria-label="design section, collapsed"><button id="designToggleLink" type="button" onclick="toggleContentSection('design')" aria-label="design section" aria-expanded="false">Design<span id="designToggle" class="fa fa-plus"></span></button></legend>
                             <div id="designShowContent" class="showContentMsg" aria-label="Expand this section using the button to customise the map">Customise the map...</div>
                             <div id="designForm" class="hideContent">
                                 Customise the map with titles, choose the palette etc.
@@ -303,10 +303,10 @@
                             </div>
                         </fieldset>
 
-                        <a id="updateButton" href="javascript:createVisualisation()" aria-label="Update the map" class="labButton" role="button">
+                        <button id="updateButton" type="button" onclick="createVisualisation()" aria-label="Update the map" class="labButton">
                             <span id="updateIcon" class="fas fa-redo-alt fa3x" aria-hidden="true"></span>
                             UPDATE
-                        </a>
+                        </button>
                     </div>
                     <div id="vegaLiteViz" aria-live="assertive"></div>
                 </div>
@@ -538,15 +538,13 @@
                     // Accessibility features
                     if (elementIcon.classList == 'fa fa-minus') {
                         // section is expanded
-                        elementLink.setAttribute('aria-label', 'toggle to collapse ' + name + ' section');
-                        elementLink.parentNode.setAttribute('aria-expanded', 'true');
-                        elementLink.parentNode.setAttribute('aria-label', name + ' (currently expanded)');
+                        elementLink.setAttribute('aria-expanded', 'true');
+                        elementLink.parentNode.setAttribute('aria-label', name + ' section, expanded');
                     }
                     else {
                         // section is collapsed
-                        elementLink.setAttribute('aria-label', 'toggle to expand ' + name + ' section');
-                        elementLink.parentNode.setAttribute('aria-expanded', 'false');
-                        elementLink.parentNode.setAttribute('aria-label', name + ' (currently collapsed)');
+                        elementLink.setAttribute('aria-expanded', 'false');
+                        elementLink.parentNode.setAttribute('aria-label', name + ' section, collapsed');
                     }
                 }
 
