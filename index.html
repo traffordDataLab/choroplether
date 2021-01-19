@@ -23,27 +23,6 @@
                 padding-top: 0.75em;
             }
 
-            legend
-            {
-                font-size: 14px;
-                font-weight: bold;
-                text-transform: uppercase;
-                background-color: #5d77a3;
-                color: #fff;
-                border-radius: 10px;
-                padding: 0 8px;
-            }
-
-            legend:hover
-            {
-                cursor: pointer;
-            }
-
-            fieldset ul
-            {
-                padding-left: 1em;  /* don't indent the list past the left margin of the other content */
-            }
-
             fieldset textarea
             {
                 width: 100%;
@@ -52,14 +31,31 @@
                 resize: vertical;
             }
 
-            legend a
+            select
             {
-                color: #fff;
+                margin-top: 1em;
             }
 
-            legend a:hover
+            legend
             {
-                text-decoration: none;
+                background-color: #5d77a3;
+                border-radius: 10px;
+                padding: 0 8px;
+            }
+
+            legend button
+            {
+                background-color: transparent;
+                color: #fff;
+                border: 0;
+                padding: 0;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+
+            legend:hover, legend button:hover
+            {
+                cursor: pointer;
             }
 
             legend .fa
@@ -67,9 +63,9 @@
                 margin-left: 0.5em; /* move the expand/minimise icon away from legend name in the fieldsets */
             }
 
-            select
+            fieldset ul
             {
-                margin-top: 1em;
+                padding-left: 1em;  /* don't indent the list past the left margin of the other content */
             }
 
             .showContentMsg
@@ -103,7 +99,7 @@
             #updateButton
             {
                 margin-left: 10px;
-                padding: 6px 12px 4px 6px;
+                padding: 6px 12px 6px 6px;
                 border-radius: 20px;
             }
 
@@ -146,7 +142,6 @@
                 {
                     width: 100%;
                     max-width: 100%;
-                    xmax-width: 400px;
                     overflow-x: scroll;
                 }
             }
@@ -156,7 +151,6 @@
             {
                 font-size: 1em;
                 margin: 0;
-                padding: 0 10px;
             }
 
             /* Font-Awesome overridden styles */
