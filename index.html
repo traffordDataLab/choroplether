@@ -174,7 +174,7 @@
             <header>
                 <nav>
                     <ul id="a11yNav">
-                        <li><a href="#dataToggleLink" class="themeBlockDark">Skip to data section</a></li>
+                        <li><a href="#dataToggleButton" class="themeBlockDark">Skip to data section</a></li>
                     </ul>
                     <a href="https://www.trafforddatalab.io/index.html" aria-label="Go to the Trafford Data Lab home page"><img src="https://www.trafforddatalab.io/assets/logo/trafforddatalab_logo.svg" alt="Trafford Data Lab" width="93" border="0" class="traffordDataLabLogo"/></a>
                 </nav>
@@ -187,7 +187,7 @@
                 <div id="layoutContainer">
                     <div id="toolsPanel">
                         <fieldset>
-                            <legend aria-label="data section, expanded"><button id="dataToggleLink" type="button" onclick="toggleContentSection('data')" aria-label="data section" aria-expanded="true">Data<span id="dataToggle" class="fa fa-minus"></span></button></legend>
+                            <legend aria-label="data section, expanded"><button id="dataToggleButton" type="button" onclick="toggleContentSection('data')" aria-label="data section" aria-expanded="true">Data<span id="dataToggleIcon" class="fa fa-minus"></span></button></legend>
                             <div id="dataShowContent" class="showContentMsg hideContent" aria-label="Expand this section using the button to provide the data">Provide the data...</div>
                             <div id="dataForm">
                                 <span id="dataInfo">Provide the data in <abbr title="Comma Separated Values"><a href="data_example.csv" target="_blank" aria-label="CSV - Comma Separated Values">CSV</a></abbr> or <abbr title="JavaScript Object Notation"><a href="data_example.json" target="_blank" aria-label="JSON - JavaScript Object Notation">JSON</a></abbr> format,</span> (use the links to download a template example of each file type):
@@ -200,10 +200,10 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend aria-label="geography section, collapsed"><button id="geographyToggleLink" type="button" onclick="toggleContentSection('geography')" aria-label="geography section" aria-expanded="false">Geography<span id="geographyToggle" class="fa fa-plus"></span></button></legend>
+                            <legend aria-label="geography section, collapsed"><button id="geographyToggleButton" type="button" onclick="toggleContentSection('geography')" aria-label="geography section" aria-expanded="false">Geography<span id="geographyToggleIcon" class="fa fa-plus"></span></button></legend>
                             <div id="geographyShowContent" class="showContentMsg" aria-label="Expand this section using the button to provide the geography">Select a geography...</div>
                             <div id="geographyForm" class="hideContent">
-                                <label for="geographyList">Select a geography</label> matching your data - choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
+                                <label for="geographyList">Select a geography</label> matching your data. Choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
                                     <optgroup label="Electoral Ward">
@@ -238,7 +238,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend aria-label="design section, collapsed"><button id="designToggleLink" type="button" onclick="toggleContentSection('design')" aria-label="design section" aria-expanded="false">Design<span id="designToggle" class="fa fa-plus"></span></button></legend>
+                            <legend aria-label="design section, collapsed"><button id="designToggleButton" type="button" onclick="toggleContentSection('design')" aria-label="design section" aria-expanded="false">Design<span id="designToggleIcon" class="fa fa-plus"></span></button></legend>
                             <div id="designShowContent" class="showContentMsg" aria-label="Expand this section using the button to customise the map">Customise the map...</div>
                             <div id="designForm" class="hideContent">
                                 Customise the map with titles, choose the palette etc.
@@ -249,7 +249,7 @@
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
-                                <label for="paletteList">Select a palette</label> - choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
+                                <label for="paletteList">Select a palette</label>. Choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
                                     <optgroup label="Sequential Single-Hue">
@@ -523,28 +523,28 @@
                 // ========= UI operations =========
                 // Performs CSS class add/remove etc. to show/hide content sections
                 function toggleContentSection(name) {
-                    var elementIcon = document.getElementById(name + 'Toggle');
-                    var elementMessage = document.getElementById(name + 'ShowContent');
-                    var elementForm = document.getElementById(name + 'Form');
-                    var elementLink = document.getElementById(name + 'ToggleLink');
+                    var elIcon = document.getElementById(name + 'ToggleIcon');
+                    var elMsg = document.getElementById(name + 'ShowContent');
+                    var elForm = document.getElementById(name + 'Form');
+                    var elButton = document.getElementById(name + 'ToggleButton');
 
                     // Font Awesome icon in the legend
-                    elementIcon.classList.toggle('fa-minus');
-                    elementIcon.classList.toggle('fa-plus');
+                    elIcon.classList.toggle('fa-minus');
+                    elIcon.classList.toggle('fa-plus');
 
-                    elementMessage.classList.toggle('hideContent'); // message to show the full content
-                    elementForm.classList.toggle('hideContent');    // the main content of the fieldset
+                    elMsg.classList.toggle('hideContent');  // message to show the full content
+                    elForm.classList.toggle('hideContent'); // the main content of the fieldset
 
                     // Accessibility features
-                    if (elementIcon.classList == 'fa fa-minus') {
+                    if (elIcon.classList == 'fa fa-minus') {
                         // section is expanded
-                        elementLink.setAttribute('aria-expanded', 'true');
-                        elementLink.parentNode.setAttribute('aria-label', name + ' section, expanded');
+                        elButton.setAttribute('aria-expanded', 'true');
+                        elButton.parentNode.setAttribute('aria-label', name + ' section, expanded');
                     }
                     else {
                         // section is collapsed
-                        elementLink.setAttribute('aria-expanded', 'false');
-                        elementLink.parentNode.setAttribute('aria-label', name + ' section, collapsed');
+                        elButton.setAttribute('aria-expanded', 'false');
+                        elButton.parentNode.setAttribute('aria-label', name + ' section, collapsed');
                     }
                 }
 
