@@ -658,9 +658,20 @@
                             }
                         }
 
+                        // These aspects relate to the keys used to bind to the data. The values apply to all geographies with the exception of Trafford Localities which use area_name (see below)
+                        vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_code";
+                        vegaLiteSpec.layer[0].transform[0].from.key = "area_code";
+
                         // Is the content a URL (must be https://) or pasted data?
                         if (geogVal.substring(0, 8) === 'https://') {
                             vegaLiteSpec.layer[0].data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
+
+                            // detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
+                            if (geogVal == 'https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson' || geogVal == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
+                                vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
+                                vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
+                            }
+
                             createVisualisation();                       // update the visualisation
                         }
                         else {
