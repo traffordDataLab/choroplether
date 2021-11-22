@@ -96,6 +96,7 @@
                 display: block;
                 background-color: #ccc;
                 padding: 10px;
+                overflow: hidden;
             }
         </style>
     </head>
@@ -162,12 +163,12 @@
                     <img src="docs_images/warning.png" width="200" alt="Screenshot of the warning message." class="screenshot" style="float: left; margin-right: 20px; padding: 10px;"/>
                     The warning message means either that the data you have provided doesn't match the currently selected geography (the next section explains this in more detail) or there is something wrong with your data. The most important aspects are:
                     <br /><br />
-                    1. The data must contain the field &quot;<strong>value</strong>&quot; which contains the values to be visualised
+                    1. The data must contain the field &quot;<strong>value</strong>&quot; which contains the values to be visualised.
                     <br />
-                    2. Both the data and the geography must contain the field &quot;<strong>area_code</strong>&quot; as this is the joining variable used to match the data to the spatial geography
+                    2. Both the data and the geography must contain the field &quot;<strong>area_code</strong>&quot; as this is the joining variable used to match the data to the spatial geography. The only exception to this is if you are using a custom geography which doesn't have area codes defined for it, such as Trafford Localities. In this case both the data and the geography must contain the field &quot;<strong>area_name</strong>&quot;.
                 </p>
                 <p>
-                    You can find the <abbr title="Office for National Statistics">ONS</abbr> codes for different administrative and statistical geographies from the <a href="http://geoportal.statistics.gov.uk/" target="_blank">Open Geography Portal</a>.
+                    You can find the <abbr title="Office for National Statistics">ONS</abbr> area codes for different administrative and statistical geographies from the <a href="http://geoportal.statistics.gov.uk/" target="_blank">Open Geography Portal</a>.
                 </p>
                 <br class="noFloat"/>
 
@@ -181,11 +182,13 @@
                     You can now provide your geography in a similar way to the data: choosing a local file from your device or entering either the <abbr title="Uniform Resource Locator">URL</abbr> (must start with https://) of a geography file or the contents of the file itself into the text box provided.
                 </p>
                 <p>
-                    The geography must be valid <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org" target="_blank">GeoJSON</a></abbr>, an open-source spatial format, and each &quot;<strong>Feature</strong>&quot; must contain the key &quot;<strong>area_code</strong>&quot; to identify it. This key is used to match the features in the spatial geography to the data. The following example from a spatial file describing Trafford's Electoral Wards should hopefully demonstrate this:
+                    The geography must be valid <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org" target="_blank">GeoJSON</a></abbr>, an open-source spatial format, and each &quot;<strong>Feature</strong>&quot; must contain the key &quot;<strong>area_code</strong>&quot; to identify it. This key is used to match the features in the spatial geography to the data. The only exception to this is if you are using a custom geography which doesn't have area codes defined for it, such as Trafford Localities. In this case both the data and the geography must contain the field &quot;<strong>area_name</strong>&quot;.  The &quot;<strong>area_name</strong>&quot; key is also used as a label within the tooltip displaying the data value associated to an area when you select it on the map.
                 </p>
-                <br class="noFloat"/>
-                <br />
-                <code class="code" aria-label="Example code of a GeoJSON geography file">
+                <p>
+                    The following example from a spatial file describing Trafford's Electoral Wards demonstrates the use of the <strong>area_code</strong> key:
+                </p>
+                <!--br class="noFloat"/-->
+                <code class="code noFloat" aria-label="Example code of a GeoJSON geography file">
                     <pre>
     {
         "type": "FeatureCollection",
