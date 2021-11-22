@@ -648,9 +648,7 @@
 
                 // Check the input provided for the geography of the visualisation
                 function checkGeography(val) {
-                    var geogVal = val;
-
-                    if (geogVal !== '' && geogVal !== null && geogVal !== 'other') {
+                    if (val !== '' && val !== null && val !== 'other') {
                         // Set up the common objects of the geography
                         vegaLiteSpec.layer[0].data = {
                             "format": {
@@ -658,29 +656,35 @@
                             }
                         }
 
-                        // These aspects relate to the keys used to bind to the data. The values apply to all geographies with the exception of Trafford Localities which use area_name (see below)
+                        // These aspects relate to the keys used to bind to the data. The values apply to all geographies with the exception of Trafford Localities or custom geographies which use area_name (see below)
                         vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_code";
                         vegaLiteSpec.layer[0].transform[0].from.key = "area_code";
 
                         // Is the content a URL (must be https://) or pasted data?
-                        if (geogVal.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.layer[0].data.url = geogVal;    // create a URL object and set it to the value chosen in the geography select list
+                        if (val.substring(0, 8) === 'https://') {
+                            vegaLiteSpec.layer[0].data.url = val;    // create a URL object and set it to the value chosen in the geography select list
 
-                            // detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
-                            if (geogVal == 'https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson' || geogVal == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
+                            // Detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
+                            if (val == 'https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson' || val == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
                                 vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
                                 vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
                             }
 
-                            createVisualisation();                       // update the visualisation
+                            createVisualisation();                   // update the visualisation
                         }
                         else {
-                            // the data must be in the box directly, either pasted or loaded locally
-                            // if JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
-
+                            // The data must be in the box directly, either pasted or loaded locally
+                            // If JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
                             try {
-                                var data = JSON.parse(geogVal);     // as GeoJSON is valid JSON, attempt to parse it
+                                var data = JSON.parse(val);     // as GeoJSON is valid JSON, attempt to parse it
                                 vegaLiteSpec.layer[0].data.values = data;
+
+                                // Check if the geography has a property called "area_code" - if not, we need to try to use "area_name" instead. If this doesn't exist then the app will report a general error and ask for the data and geography to be checked.
+                                if (!data.features[0].properties.hasOwnProperty('area_code')) {
+                                    vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
+                                    vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
+                                }
+
                                 createVisualisation();              // update the visualisation
                             }
                             catch(e) {
