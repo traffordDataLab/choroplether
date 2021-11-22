@@ -567,7 +567,7 @@
                    	        reader.onload = function (e) {
                                 destEl = document.getElementById(dest);
                                 destEl.value = e.target.result;
-                                (dest === 'data') ? checkData(destEl) : checkGeography(destEl);
+                                (dest === 'data') ? checkData(destEl) : checkGeography(destEl.value);
                    	        };
                             reader.readAsText(src.files[0]);
                             src.value = '';  // reset the value of the file input box in case the user chooses the same file again - as this would not result in the onchange event firing
