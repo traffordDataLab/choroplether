@@ -122,17 +122,16 @@
                             <li><a href="#exportedit">Exporting and further editing</a></li>
                             <li><a href="#credits">Credits</a></li>
                         </ul>
-
-                        <a name="intro"></a><h2>Introduction</h2>
-                        <p>
-                            <a href="index.html">Choroplether</a> is a web application that allows you to create <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> without having to write all the code yourself. The resulting output can be saved as an <abbr title="Scalable Vector Graphics">SVG</abbr> or <abbr title="Portable Network Graphics">PNG</abbr> image or opened within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> for further customisation. You can also embed the map in a webpage using <a href="https://github.com/vega/vega-embed" target="_blank">Vega-embed</a> if you require an interactive visualisation.
-                        </p>
                     </div>
                     <div>
                         <img src="docs_images/example.png" alt="Example screenshot of the application." class="screenshot" style="margin-top: 25px;"/>
                     </div>
                 </div>
 
+                <a name="intro"></a><h2>Introduction</h2>
+                <p>
+                    <a href="index.html">Choroplether</a> is a web application that allows you to create <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> without having to write all the code yourself. The resulting output can be saved as an <abbr title="Scalable Vector Graphics">SVG</abbr> or <abbr title="Portable Network Graphics">PNG</abbr> image or opened within the <a href="https://vega.github.io/vega-editor/" target="_blank">Vega Editor</a> for further customisation. You can also embed the map in a webpage using <a href="https://github.com/vega/vega-embed" target="_blank">Vega-embed</a> if you require an interactive visualisation.
+                </p>
                 <p>
                     You supply some suitably formatted data, select or provide a spatial geography that matches the data and then customise the appearance. The interface is split into 3 sections: <a href="#data"><strong>Data</strong></a>, <a href="#geography"><strong>Geography</strong></a> and <a href="#design"><strong>Design</strong></a>, each can be collapsed and expanded as required by activating the toggle button at the top of each section. The app attempts to update the visualisation as you make changes in any of the sections, or when you activate the <strong>UPDATE</strong> button.
                 </p>
@@ -141,7 +140,7 @@
                 <a name="demo"></a><h2>Demonstration</h2>
                 <p>
                     <img src="docs_images/design.png" width="300" alt="Screenshot of the design section expanded." class="screenshot" style="float: left; margin-right: 20px; margin-bottom: 10px; padding: 10px;"/>
-                    The app loads with an example dataset already visualised: mid-2017 population estimates from the <a href="https://www.ons.gov.uk/" target="_blank">Office for National Statistics</a> for the electoral wards of Trafford.
+                    The app loads with an example dataset already visualised: Census 2021 population estimates from the <a href="https://www.ons.gov.uk/" target="_blank">Office for National Statistics</a> for the local authorities in Greater Manchester.
                 </p>
                 <p>
                     Expand the <strong>Design</strong> section using the toggle button and add a title by entering some text in the <strong>Map title:</strong> text box. Activate the <strong>UPDATE</strong> button and your title will be added to the map.
@@ -185,9 +184,8 @@
                     The geography must be valid <abbr title="Geospatial data in JavaScript Object Notation"><a href="https://geojson.org" target="_blank">GeoJSON</a></abbr>, an open-source spatial format, and each &quot;<strong>Feature</strong>&quot; must contain the key &quot;<strong>area_code</strong>&quot; to identify it. This key is used to match the features in the spatial geography to the data. The only exception to this is if you are using a custom geography which doesn't have area codes defined for it, such as Trafford Localities. In this case both the data and the geography must contain the field &quot;<strong>area_name</strong>&quot;.  The &quot;<strong>area_name</strong>&quot; key is also used as a label within the tooltip displaying the data value associated to an area when you select it on the map.
                 </p>
                 <p>
-                    The following example from a spatial file describing Trafford's Electoral Wards demonstrates the use of the <strong>area_code</strong> key:
+                    The following example from a spatial file describing the local authority boundaries within Greater Manchester demonstrates the use of the <strong>area_code</strong> key:
                 </p>
-                <!--br class="noFloat"/-->
                 <code class="code noFloat" aria-label="Example code of a GeoJSON geography file">
                     <pre>
     {
@@ -197,15 +195,15 @@
             {
                 "type": "Feature",
                 "properties": {
-                    "area_code": "E05000819",
-                    "area_name": "Altrincham"
+                    "area_code": "E08000009",
+                    "area_name": "Trafford"
                 },
                 "geometry": {
                     "type": "MultiPolygon",
                     "coordinates": [...
                     </pre>
                 </code>
-                <p>The ward of Altrincham has an <strong>area_code</strong> of E05000819. In the example data files this <strong>area_code</strong> has the value <strong>12803</strong>. This value is assigned to a colour based on the range of values within the dataset and the type of <strong>scale</strong> you want to use, (this is explained in the Design section). The result is the shape of Altrincham ward will be displayed, filled with the assigned colour.</p>
+                <p>Trafford has an <strong>area_code</strong> of E08000009. In the example data files this <strong>area_code</strong> has the value <strong>235052</strong> (representing the Census 2021 population estimate). This value is assigned to a colour based on the range of values within the dataset and the type of <strong>scale</strong> you want to use, (this is explained in the Design section). The result is the shape of Trafford will be displayed, filled with the assigned colour.</p>
                 <br class="noFloat"/>
 
                 <a name="design"></a><h2>Design</h2>

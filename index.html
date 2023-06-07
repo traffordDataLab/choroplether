@@ -176,7 +176,7 @@
             </header>
 
             <main id="main">
-                <p>Choroplether allows the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> using your own data. A demonstration showing the <abbr title="Office for National Statistics"><a href="https://www.ons.gov.uk/" target="_blank" aria-label="ONS - Office for National Statistics">ONS</a></abbr> 2017 mid-year population estimates for Trafford's wards has been automatically generated. <a href="documentation.html" target="_blank">The documentation</a> provides further details on using the app, however please note that Choroplether requires a modern browser - it will not work in Internet Explorer.</p>
+                <p>Choroplether allows the quick creation of <a href="https://www.axismaps.com/guide/univariate/choropleth/" target="_blank">choropleth maps</a> in <a href="https://vega.github.io/vega-lite/" target="_blank">Vega-Lite</a> using your own data. A demonstration showing the <abbr title="Office for National Statistics"><a href="https://www.ons.gov.uk/" target="_blank" aria-label="ONS - Office for National Statistics">ONS</a></abbr> Census 2021 population estimates for local authorities in Greater Manchester has been automatically generated. <a href="documentation.html" target="_blank">The documentation</a> provides further details on using the app, however please note that Choroplether requires a modern browser - it will not work in Internet Explorer.</p>
 
                 <div id="layoutContainer">
                     <div id="toolsPanel">
@@ -200,9 +200,12 @@
                                 <label for="geographyList">Select a geography</label> matching your data. Choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="geographyList" onchange="checkGeographyChoice(this.value)">
+                                    <optgroup label="Local Authority">
+                                        <option value="https://www.trafforddatalab.io/spatial_data/local_authority/2021/gm_local_authority_generalised.geojson" selected="selected">Greater Manchester Authorities (2021)</option>
+                                    </optgroup>
                                     <optgroup label="Electoral Ward">
-                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/trafford_ward_generalised.geojson" selected="selected">Trafford wards</option>
-                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2017/gm_ward_generalised.geojson">Greater Manchester wards</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2023/trafford_ward_full_resolution.geojson">Trafford wards (2023)</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/ward/2022/gm_ward_generalised.geojson">Greater Manchester wards (2022)</option>
                                     </optgroup>
                                     <optgroup label="Lower layer Super Output Area (LSOA)">
                                         <option value="https://www.trafforddatalab.io/spatial_data/lsoa/2021/trafford_lsoa_generalised.geojson">Trafford LSOAs (2021)</option>
@@ -217,7 +220,7 @@
                                         <option value="https://www.trafforddatalab.io/spatial_data/msoa/2011/gm_msoa_generalised.geojson">Greater Manchester MSOAs (2011)</option>
                                     </optgroup>
                                     <optgroup label="Miscellaneous">
-                                        <option value="https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson">Trafford localities</option>
+                                        <option value="https://www.trafforddatalab.io/spatial_data/council_defined/2023/trafford_localities_full_resolution.geojson">Trafford localities (2023)</option>
                                     </optgroup>
                                     <option value="other">Other (custom)</option>
                                 </select>
