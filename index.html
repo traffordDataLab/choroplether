@@ -672,7 +672,7 @@
                             vegaLiteSpec.layer[0].data.url = val;    // create a URL object and set it to the value chosen in the geography select list
 
                             // Detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
-                            if (val == 'https://www.trafforddatalab.io/spatial_data/council_defined/trafford_localities.geojson' || val == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
+                            if (val == 'https://www.trafforddatalab.io/spatial_data/council_defined/2023/trafford_localities_full_resolution.geojson' || val == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
                                 vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
                                 vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
                             }
