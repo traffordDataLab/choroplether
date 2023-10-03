@@ -359,7 +359,7 @@
 
                 // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
                 var vegaLiteSpec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
+                    "$schema": "https://vega.github.io/schema/vega-lite/v5.14.1.json",
                     "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
                     "autosize": "fit",
                     "width": 500,
@@ -370,23 +370,23 @@
                         "color": "#757575",
                         "fontSize": 18
                     },
+                    "data": {
+                        "url": document.getElementById("geographyList").value,
+                        "format": {
+                            "property": "features"
+                        }
+                    },
+                    "transform": [
+                        {
+                            "lookup": "properties.area_code",
+                            "from": {
+                                "key": "area_code",
+                                "fields": ["value"]
+                            }
+                        }
+                    ],
                     "layer": [
                         {
-                            "data": {
-                                "url": document.getElementById("geographyList").value,
-                                "format": {
-                                    "property": "features"
-                                }
-                            },
-                            "transform": [
-                                {
-                                    "lookup": "properties.area_code",
-                                    "from": {
-                                        "key": "area_code",
-                                        "fields": ["value"]
-                                    }
-                                }
-                            ],
                             "mark": {
                                 "type": "geoshape",
                                 "stroke": "white",
@@ -595,7 +595,7 @@
                     if (el.value !== '' && el.value !== null) {
                         // Is the content a URL (must be https://) or pasted data?
                         if (el.value.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.layer[0].transform[0].from.data = {
+                            vegaLiteSpec.transform[0].from.data = {
                                 "url": el.value
                             }
                         }
@@ -621,7 +621,7 @@
                             }
 
                             // add the data to the Vega-Lite spec
-                            vegaLiteSpec.layer[0].transform[0].from.data = {
+                            vegaLiteSpec.transform[0].from.data = {
                                 "values": data,
                                 "format": {
                                     "type": format
@@ -630,7 +630,7 @@
                         }
                     }
                     else {
-                        vegaLiteSpec.layer[0].transform[0].from.data = {};   // the data box is empty so set the spec accordingly
+                        vegaLiteSpec.transform[0].from.data = {};   // the data box is empty so set the spec accordingly
                     }
 
                     createVisualisation();  // update the visualisation
@@ -657,24 +657,24 @@
                 function checkGeography(val) {
                     if (val !== '' && val !== null && val !== 'other') {
                         // Set up the common objects of the geography
-                        vegaLiteSpec.layer[0].data = {
+                        vegaLiteSpec.data = {
                             "format": {
                                 "property": "features"
                             }
                         }
 
                         // These aspects relate to the keys used to bind to the data. The values apply to all geographies with the exception of Trafford Localities or custom geographies which use area_name (see below)
-                        vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_code";
-                        vegaLiteSpec.layer[0].transform[0].from.key = "area_code";
+                        vegaLiteSpec.transform[0].lookup = "properties.area_code";
+                        vegaLiteSpec.transform[0].from.key = "area_code";
 
                         // Is the content a URL (must be https://) or pasted data?
                         if (val.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.layer[0].data.url = val;    // create a URL object and set it to the value chosen in the geography select list
+                            vegaLiteSpec.data.url = val;    // create a URL object and set it to the value chosen in the geography select list
 
                             // Detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
                             if (val.indexOf('https://www.trafforddatalab.io/spatial_data/council_defined/2023/trafford_localities_') > -1 || val == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
-                                vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
-                                vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
+                                vegaLiteSpec.transform[0].lookup = "properties.area_name";
+                                vegaLiteSpec.transform[0].from.key = "area_name";
                             }
 
                             createVisualisation();                   // update the visualisation
@@ -684,12 +684,12 @@
                             // If JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
                             try {
                                 var data = JSON.parse(val);     // as GeoJSON is valid JSON, attempt to parse it
-                                vegaLiteSpec.layer[0].data.values = data;
+                                vegaLiteSpec.data.values = data;
 
                                 // Check if the geography has a property called "area_code" - if not, we need to try to use "area_name" instead. If this doesn't exist then the app will report a general error and ask for the data and geography to be checked.
                                 if (!data.features[0].properties.hasOwnProperty('area_code')) {
-                                    vegaLiteSpec.layer[0].transform[0].lookup = "properties.area_name";
-                                    vegaLiteSpec.layer[0].transform[0].from.key = "area_name";
+                                    vegaLiteSpec.transform[0].lookup = "properties.area_name";
+                                    vegaLiteSpec.transform[0].from.key = "area_name";
                                 }
 
                                 createVisualisation();              // update the visualisation
