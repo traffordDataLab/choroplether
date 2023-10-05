@@ -250,6 +250,8 @@
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
+                                <span class="longInputBoxLabel">Map labels:</span><input type="checkbox" id="vizAreaLabels" name="vizAreaLabels" onchange="mapLabels()"/><label for="vizAreaLabels">Area names</label> | <input type="checkbox" id="vizValueLabels" name="vizValueLabels" onchange="mapLabels()"/><label for="vizValueLabels">Area values</label>
+                                <br /><br />
                                 <label for="paletteList">Select a palette</label>. Choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
                                 <select id="paletteList" onchange="updatePalette(this)">
@@ -322,9 +324,9 @@
         <!-- File loading elements END -->
 
         <!-- Load script libraries for Vega-Lite -->
-        <script src="https://cdn.jsdelivr.net/npm/vega@5.5.3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.1"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0/build/vega.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.1/build/vega-lite.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.23.0/build/vega-embed.min.js"></script>
         <!-- Our external file loader -->
         <script src="https://www.trafforddatalab.io/assets/javascript/labAjax.js"></script>
 
@@ -359,7 +361,7 @@
 
                 // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
                 var vegaLiteSpec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v5.14.1.json",
+                    "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json",
                     "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
                     "autosize": "fit",
                     "width": 500,
@@ -449,6 +451,19 @@
                             "encoding": {
                                 "text": {"field": "note", "type": "nominal"}
                             }
+                        },
+                        {
+                            "encoding": {
+                                "longitude": {
+                                    "field": "properties.lon",
+                                    "type": "quantitative"
+                                },
+                                "latitude": {
+                                    "field": "properties.lat",
+                                    "type": "quantitative"
+                                }
+                            },
+                            "layer": []
                         }
                     ],
                     "config": {
@@ -737,6 +752,102 @@
                     else {
                         vegaLiteSpec.layer[1].mark.dy = 283;
                     }
+                }
+                
+                // Handles the map labels (none, area names, area values, or both)
+                function mapLabels() {
+                    areaNameLabelsRequired = document.getElementById('vizAreaLabels').checked;
+                    areaValueLabelsRequired = document.getElementById('vizValueLabels').checked;
+                    
+                    vegaLiteSpec.layer[2].layer = [];   // Clear any current labels
+                    
+                    if (areaNameLabelsRequired || areaValueLabelsRequired) {
+                        
+                        // Add the circle marker at the polygon's centroid
+                        vegaLiteSpec.layer[2].layer.push(
+                            {
+                                "mark": {
+                                    "type": "circle",
+                                    "size": 12,
+                                    "stroke": "#000",
+                                    "strokeWidth": 1,
+                                    "color": "#fff"
+                                }
+                            }
+                        );
+                        
+                        if (areaNameLabelsRequired) {
+                            // Add the area name of the polygon above the centroid circle
+                            // We add 2 text marks overlapping each other to create white text with a black outline
+                            
+                            vegaLiteSpec.layer[2].layer.push(
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "dy": -12,
+                                        "stroke": "#000",
+                                        "strokeWidth": 1.5,
+                                        "fontWeight": "bold",
+                                        "limit": 70
+                                    },
+                                    "encoding": {
+                                        "text": {"field": "properties.area_name"}
+                                    }
+                                }
+                            );
+                            
+                            vegaLiteSpec.layer[2].layer.push(
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "dy": -12,
+                                        "color": "#fff",
+                                        "fontWeight": "bold",
+                                        "limit": 70
+                                    },
+                                    "encoding": {
+                                        "text": {"field": "properties.area_name"}
+                                    }
+                                }
+                            );
+                        }
+                        
+                        if (areaValueLabelsRequired) {
+                            // Add the value of the polygon below the centroid circle
+                            // We add 2 text marks overlapping each other to create white text with a black outline
+                            
+                            vegaLiteSpec.layer[2].layer.push(
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "dy": 12,
+                                        "stroke": "#000",
+                                        "strokeWidth": 1.5,
+                                        "fontWeight": "bold"
+                                    },
+                                    "encoding": {
+                                        "text": {"field": "value", "type": "quantitative"}
+                                    }
+                                }
+                            );
+                            
+                            vegaLiteSpec.layer[2].layer.push(
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "dy": 12,
+                                        "color": "#fff",
+                                        "fontWeight": "bold"
+                                    },
+                                    "encoding": {
+                                        "text": {"field": "value", "type": "quantitative"}
+                                    }
+                                }
+                            );
+                        }
+                    }
+                    
+                    createVisualisation();  // update the visualisation
                 }
 
                 // Updates the palette scheme name used by the visualisation
