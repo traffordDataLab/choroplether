@@ -324,11 +324,12 @@
         <!-- File loading elements END -->
 
         <!-- Load script libraries for Vega-Lite -->
-        <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0/build/vega.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.1/build/vega-lite.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.23.0/build/vega-embed.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.5.3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
         <!-- Our external file loader -->
         <script src="https://www.trafforddatalab.io/assets/javascript/labAjax.js"></script>
+        <script src="https://www.trafforddatalab.io/assets/javascript/labError.js"></script>
 
         <script>
             /*
@@ -361,7 +362,7 @@
 
                 // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
                 var vegaLiteSpec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json",
+                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
                     "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
                     "autosize": "fit",
                     "width": 500,
@@ -463,7 +464,7 @@
                                     "type": "quantitative"
                                 }
                             },
-                            "layer": []
+                            "layer": []     // blank array ready to contain map labels if required
                         }
                     ],
                     "config": {
@@ -517,7 +518,10 @@
                     'lightorange': true,
                     'lighttealblue': true
                 }
-
+                
+                
+                var vizAreaLabelsContent = 'properties.area_name';  // This will be either area_name or area_code to use for the map area labels and tooltips 
+                
 
                 // ========= Console warn override to handle issues raised from the vegaEmbed catch clause =========
                 console.warnDefault = console.warn;     // Cache the default action for warn
@@ -678,42 +682,93 @@
                             }
                         }
 
-                        // These aspects relate to the keys used to bind to the data. The values apply to all geographies with the exception of Trafford Localities or custom geographies which use area_name (see below)
-                        vegaLiteSpec.transform[0].lookup = "properties.area_code";
-                        vegaLiteSpec.transform[0].from.key = "area_code";
-
                         // Is the content a URL (must be https://) or pasted data?
                         if (val.substring(0, 8) === 'https://') {
-                            vegaLiteSpec.data.url = val;    // create a URL object and set it to the value chosen in the geography select list
-
-                            // Detect if the geography is Trafford's localities - if so we need to use area_name rather than area_code as the joining variable with the data.  As it is a custom created geography by Trafford Council it doesn't have ONS statistical area codes assigned to it.
-                            if (val.indexOf('https://www.trafforddatalab.io/spatial_data/council_defined/2023/trafford_localities_') > -1 || val == 'https://www.trafforddatalab.io/council_open_data/boundaries/localities.geojson') {
-                                vegaLiteSpec.transform[0].lookup = "properties.area_name";
-                                vegaLiteSpec.transform[0].from.key = "area_name";
-                            }
-
-                            createVisualisation();                   // update the visualisation
+                            // Attempt to load GeoJSON specified in the URL to test if it exists and if so, so that we can validate it
+                            labAjax(val, function (data) {
+                                if (data !== null && data !== '') {
+                                    // If we have reached this point then the geography will have been successfully parsed and we know it's valid JSON
+                                    vegaLiteSpec.data.url = val;    // create a URL object and set it to the URL provided
+                                    setupGeography(data);           // setup all the geography-data key bindings, map labels and tooltips
+                                }
+                                else {
+                                    // Create an error message to inform the user that there is an issue with the geography - either the URL doesn't exist or access is forbidden/denied or it isn't valid JSON and so failed parsing.)
+                                    vegaLiteSpec.data.url = '';
+                                    displayErrorMessage('There is an issue with the geography URL.<br />Please check it exists and the file is GeoJSON.');
+                                }
+                            }, { type: 'json' });
                         }
                         else {
                             // The data must be in the box directly, either pasted or loaded locally
                             // If JSON.parse is used on non-JSON data it will throw a syntax error, hence the try-catch block
                             try {
-                                var data = JSON.parse(val);     // as GeoJSON is valid JSON, attempt to parse it
-                                vegaLiteSpec.data.values = data;
-
-                                // Check if the geography has a property called "area_code" - if not, we need to try to use "area_name" instead. If this doesn't exist then the app will report a general error and ask for the data and geography to be checked.
-                                if (!data.features[0].properties.hasOwnProperty('area_code')) {
-                                    vegaLiteSpec.transform[0].lookup = "properties.area_name";
-                                    vegaLiteSpec.transform[0].from.key = "area_name";
-                                }
-
-                                createVisualisation();              // update the visualisation
+                                var data = JSON.parse(val);         // as GeoJSON is valid JSON, attempt to parse it
+                                vegaLiteSpec.data.values = data;    // create a data object and set it to the content provided in the box
+                                setupGeography(data);               // setup all the geography-data key bindings, map labels and tooltips
                             }
                             catch(e) {
                                 // Create an error message to inform the user that the GeoJSON isn't valid
                                 displayErrorMessage('The geography isn\'t valid GeoJSON.<br />Please check it and try again.');
                             }
                         }
+                    }
+                }
+                
+                // Setup all the geography-data key bindings, map labels and tooltips
+                function setupGeography(data) {
+                    var hasAreaCode = data.features[0].properties.hasOwnProperty('area_code') ? true : false;
+                    var hasAreaName = data.features[0].properties.hasOwnProperty('area_name') ? true : false;
+                    
+                    if (hasAreaCode || hasAreaName) {
+                        
+                        // Setup the data bindings, we prefer area_code but can use area_name if required (e.g. for Trafford localities)
+                        if (hasAreaCode) {
+                            vegaLiteSpec.transform[0].lookup = "properties.area_code";
+                            vegaLiteSpec.transform[0].from.key = "area_code";
+                        }
+                        else {
+                            vegaLiteSpec.transform[0].lookup = "properties.area_name";
+                            vegaLiteSpec.transform[0].from.key = "area_name";
+                        }
+                        
+                        
+                        // Set up the tooltips and content for map area labels if required. We prefer area_name but can use area_code if required
+                        if (hasAreaName) {
+                            vizAreaLabelsContent = "properties.area_name";
+                        }
+                        else {
+                            vizAreaLabelsContent = "properties.area_code";
+                        }
+                        
+                        vegaLiteSpec.layer[0].encoding.tooltip[0].field = vizAreaLabelsContent;
+                        
+                        
+                        var elAreaNameLabels = document.getElementById('vizAreaLabels');
+                        var elAreaValueLabels = document.getElementById('vizValueLabels');
+                        
+                        // If we don't have lat/lon properties then we can't display the labels, so we need to disable the checkbox elements
+                        // *** TODO: We need to display or unhide a message to inform the user why labels aren't available ***
+                        if (data.features[0].properties.hasOwnProperty('lat') && data.features[0].properties.hasOwnProperty('lon')) {
+                            elAreaNameLabels.disabled = false;
+                            elAreaValueLabels.disabled = false;
+                        }
+                        else {
+                            // Un-check the checkboxes and prevent them from being selected
+                            elAreaNameLabels.checked = false;
+                            elAreaNameLabels.disabled = true;
+                            
+                            elAreaValueLabels.checked = false;
+                            elAreaValueLabels.disabled = true;
+                            
+                            // Call the function to remove any current label code from the Vega-Lite spec
+                            mapLabels();
+                        }
+                        
+                        createVisualisation();  // update the visualisation
+                    }
+                    else {
+                        // Create an error message to inform the user that the GeoJSON doesn't contain the required property keys for binding to the data
+                        displayErrorMessage('The geography doesn\'t contain area_code or area_name.<br />At least one is required to visualise the data.');
                     }
                 }
 
@@ -791,7 +846,7 @@
                                         "limit": 70
                                     },
                                     "encoding": {
-                                        "text": {"field": "properties.area_name"}
+                                        "text": {"field": vizAreaLabelsContent}
                                     }
                                 }
                             );
@@ -806,7 +861,7 @@
                                         "limit": 70
                                     },
                                     "encoding": {
-                                        "text": {"field": "properties.area_name"}
+                                        "text": {"field": vizAreaLabelsContent}
                                     }
                                 }
                             );
@@ -931,6 +986,7 @@
 
                     try {
                         vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).then(function(result) {
+                            console.log(result);
                             updateButtonReset();
                         }).catch(function (error) {
                             displayErrorMessage();
