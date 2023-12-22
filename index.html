@@ -250,7 +250,7 @@
                                 <br />
                                 <label for="vizAttribution" class="longInputBoxLabel">Attribution:</label><input type="text" id="vizAttribution" name="vizAttribution" class="longInputBox" placeholder="Required for OS & ONS products" onchange="updateAttribution(this.value)"/>
                                 <br /><br />
-                                <span class="longInputBoxLabel">Map labels:</span><input type="checkbox" id="vizAreaLabels" name="vizAreaLabels" onchange="mapLabels()"/><label for="vizAreaLabels">Area names</label> | <input type="checkbox" id="vizValueLabels" name="vizValueLabels" onchange="mapLabels()"/><label for="vizValueLabels">Area values</label>
+                                <span aria-label="Map labels: add or remove labels for the area names and values on the map"><span class="longInputBoxLabel" aria-hidden="true">Map labels:</span><input type="checkbox" id="vizAreaLabels" name="vizAreaLabels" onchange="mapLabels()"/><label for="vizAreaLabels">Area names</label>&nbsp;&nbsp;<input type="checkbox" id="vizValueLabels" name="vizValueLabels" onchange="mapLabels()"/><label for="vizValueLabels">Area values</label></span>
                                 <br /><br />
                                 <label for="paletteList">Select a palette</label>. Choose <span style="font-style: italic;">&quot;other (custom)&quot;</span> for further options:
                                 <br />
