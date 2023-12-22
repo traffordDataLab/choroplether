@@ -324,9 +324,9 @@
         <!-- File loading elements END -->
 
         <!-- Load script libraries for Vega-Lite -->
-        <script src="https://cdn.jsdelivr.net/npm/vega@5.5.3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.1"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"></script>
         <!-- Our external file loader -->
         <script src="https://www.trafforddatalab.io/assets/javascript/labAjax.js"></script>
         <script src="https://www.trafforddatalab.io/assets/javascript/labError.js"></script>
@@ -362,7 +362,7 @@
 
                 // The Vega-Lite specification framework that forms the visualisation. Some objects are dynamically updated based on the user input
                 var vegaLiteSpec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0-beta.1.json",
+                    "$schema": "https://vega.github.io/schema/vega-lite/v5.16.3.json",
                     "description": "Choropleth map visualisation created by https://www.trafforddatalab.io/choroplether.",
                     "autosize": "fit",
                     "width": 500,
@@ -379,6 +379,9 @@
                             "property": "features"
                         }
                     },
+                    "projection": {
+                        "type": "mercator"
+                    },
                     "transform": [
                         {
                             "lookup": "properties.area_code",
@@ -386,6 +389,18 @@
                                 "key": "area_code",
                                 "fields": ["value"]
                             }
+                        },
+                        {
+                            "calculate": "geoCentroid(null, datum)",
+                            "as": "centroid"
+                        },
+                        {
+                            "calculate": "datum.centroid[0]",
+                            "as": "centroidLon"
+                        },
+                        {
+                            "calculate": "datum.centroid[1]",
+                            "as": "centroidLat"
                         }
                     ],
                     "layer": [
@@ -394,9 +409,6 @@
                                 "type": "geoshape",
                                 "stroke": "white",
                                 "strokeWidth": 1
-                            },
-                            "projection": {
-                                "type": "mercator"
                             },
                             "encoding": {
                                 "color": {
@@ -456,11 +468,11 @@
                         {
                             "encoding": {
                                 "longitude": {
-                                    "field": "properties.lon",
+                                    "field": "centroidLon",
                                     "type": "quantitative"
                                 },
                                 "latitude": {
-                                    "field": "properties.lat",
+                                    "field": "centroidLat",
                                     "type": "quantitative"
                                 }
                             },
@@ -741,28 +753,7 @@
                         }
                         
                         vegaLiteSpec.layer[0].encoding.tooltip[0].field = vizAreaLabelsContent;
-                        
-                        
-                        var elAreaNameLabels = document.getElementById('vizAreaLabels');
-                        var elAreaValueLabels = document.getElementById('vizValueLabels');
-                        
-                        // If we don't have lat/lon properties then we can't display the labels, so we need to disable the checkbox elements
-                        // *** TODO: We need to display or unhide a message to inform the user why labels aren't available ***
-                        if (data.features[0].properties.hasOwnProperty('lat') && data.features[0].properties.hasOwnProperty('lon')) {
-                            elAreaNameLabels.disabled = false;
-                            elAreaValueLabels.disabled = false;
-                        }
-                        else {
-                            // Un-check the checkboxes and prevent them from being selected
-                            elAreaNameLabels.checked = false;
-                            elAreaNameLabels.disabled = true;
-                            
-                            elAreaValueLabels.checked = false;
-                            elAreaValueLabels.disabled = true;
-                            
-                            // Call the function to remove any current label code from the Vega-Lite spec
-                            mapLabels();
-                        }
+                        mapLabels();
                         
                         createVisualisation();  // update the visualisation
                     }
@@ -986,7 +977,6 @@
 
                     try {
                         vegaEmbed('#vegaLiteViz', vegaLiteSpec, {defaultStyle: true}).then(function(result) {
-                            console.log(result);
                             updateButtonReset();
                         }).catch(function (error) {
                             displayErrorMessage();
